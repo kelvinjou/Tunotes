@@ -29,3 +29,11 @@ extension IntervalDescriptor where Ordinal: SpelledPitchConvertingIntervalOrdina
         return (quality, ordinal)
     }
 }
+
+extension UnorderedInterval {
+    
+}
+//
+//extension Ordinal {
+//
+//}

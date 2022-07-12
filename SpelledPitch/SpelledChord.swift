@@ -8,6 +8,7 @@
 import DataStructures
 import Pitch
 
+
 public struct SpelledChord {
 
     // MARK: - Instance Properties

@@ -6,8 +6,6 @@
 //
 //
 
-import SpelledPitch
-import PlotModel
 
 /// - TODO: Inject transposition as instance property. 
 public struct StaffModel: VerticalPlotModel {

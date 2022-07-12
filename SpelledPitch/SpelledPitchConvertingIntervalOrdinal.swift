@@ -6,6 +6,7 @@
 //
 
 import Math
+import Pitch
 
 /// Interface from converting intervals between `SpelledPitch` into `IntervalOrdinal` types.
 protocol SpelledPitchConvertingIntervalOrdinal {

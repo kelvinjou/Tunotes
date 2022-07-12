@@ -5,7 +5,6 @@
 //  Created by James Bean on 5/1/16.
 //
 //
-
 import Pitch
 
 extension Pitch {

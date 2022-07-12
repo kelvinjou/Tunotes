@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "Graphics",
-        "repositoryURL": "https://github.com/dn-m/Graphics",
-        "state": {
-          "branch": null,
-          "revision": "4d15d498a072e0c2ce7964c76c71fc41c6715538",
-          "version": "0.4.1"
-        }
-      },
-      {
         "package": "Math",
         "repositoryURL": "https://github.com/dn-m/Math",
         "state": {
@@ -20,20 +11,11 @@
         }
       },
       {
-        "package": "NotationView",
-        "repositoryURL": "https://github.com/KelvinMihir/NotationView",
-        "state": {
-          "branch": "main",
-          "revision": "33c68a70c3d6b48e070f5ab27367fbf0d3108c04",
-          "version": null
-        }
-      },
-      {
         "package": "Music",
         "repositoryURL": "https://github.com/kelvinjou/NotationViewDependentPackage",
         "state": {
           "branch": "main",
-          "revision": "1c91e8df7bebcceab39e8a79499296c74f3acead",
+          "revision": "93fa430d5b4e3ec5cca23e46f1418f830aa7dae3",
           "version": null
         }
       },
@@ -53,15 +35,6 @@
           "branch": null,
           "revision": "34b09ec3d34648a5f409457b7c7ee7bab6ca78bd",
           "version": "0.25.0"
-        }
-      },
-      {
-        "package": "SWXMLHash",
-        "repositoryURL": "https://github.com/drmohundro/SWXMLHash",
-        "state": {
-          "branch": null,
-          "revision": "f43166a8e18fdd0857f29e303b1bb79a5428bca0",
-          "version": "4.9.0"
         }
       }
     ]

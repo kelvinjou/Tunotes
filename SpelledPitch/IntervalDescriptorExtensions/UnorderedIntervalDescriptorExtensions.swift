@@ -11,7 +11,7 @@ import Math
 import Pitch
 
 extension UnorderedIntervalDescriptor {
-
+    
     /// Creates a `UnorderedSpelledInterval` with two `SpelledPitch` values.
     public init(_ a: Pitch.Spelling, _ b: Pitch.Spelling) {
         let (a,b) = ordered(a,b)

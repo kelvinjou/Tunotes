@@ -6,8 +6,6 @@
 //
 //
 
-import SpelledPitch
-import PlotModel
 
 public struct Clef: Axis {
     

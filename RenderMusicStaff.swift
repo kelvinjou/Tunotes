@@ -4,19 +4,19 @@
 //
 //  Created by Kelvin J on 7/10/22.
 //
-
 import Foundation
 
 import SwiftUI
-//import MusicKit
-//import MusicModel
-//import Pitch
-//import Duration
-//import Articulations
-//import Dynamics
 
-import StaffView
-//import Resources
+import Pitch
+import Duration
+import Articulations
+import Dynamics
+import MusicModel
+
+//still need:
+// import SpelledPitch
+
 
 
 class testing {

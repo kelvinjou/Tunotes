@@ -13,9 +13,7 @@
 #endif
 
 import Pitch
-
 extension Pitch {
-
     /// Things that can go wrong while applying a `Pitch.Spelling` to a `Pitch`.
     public enum Error: Swift.Error {
         case incompatibleSpelling(Pitch.Spelling,Pitch)

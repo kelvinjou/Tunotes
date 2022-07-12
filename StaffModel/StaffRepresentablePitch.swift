@@ -7,7 +7,6 @@
 //
 
 import Pitch
-import SpelledPitch
 
 public struct StaffRepresentablePitch {
     
