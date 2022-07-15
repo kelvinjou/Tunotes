@@ -2,12 +2,48 @@
   "object": {
     "pins": [
       {
+        "package": "Graphics",
+        "repositoryURL": "https://github.com/dn-m/Graphics",
+        "state": {
+          "branch": "latest",
+          "revision": "4d15d498a072e0c2ce7964c76c71fc41c6715538",
+          "version": null
+        }
+      },
+      {
         "package": "Math",
         "repositoryURL": "https://github.com/dn-m/Math",
         "state": {
           "branch": null,
           "revision": "519c7e3128e80fbfd43d7cc0c0947b86d423db8a",
           "version": "0.8.0"
+        }
+      },
+      {
+        "package": "MidiParser",
+        "repositoryURL": "https://github.com/musical77/MidiParser.git",
+        "state": {
+          "branch": "master",
+          "revision": "22a0bbfa0636d1b5d38401254c54c760a7ab847c",
+          "version": null
+        }
+      },
+      {
+        "package": "MusicScore",
+        "repositoryURL": "https://github.com/musical77/MusicScore",
+        "state": {
+          "branch": "main",
+          "revision": "9cc18009963dc4e44e9f9a18b20f26b987ffaf42",
+          "version": null
+        }
+      },
+      {
+        "package": "MusicSymbol",
+        "repositoryURL": "https://github.com/musical77/MusicSymbol.git",
+        "state": {
+          "branch": "main",
+          "revision": "a7e5c928b52d6b4801cdb8a22993265e5eb220e2",
+          "version": null
         }
       },
       {
@@ -35,6 +71,15 @@
           "branch": null,
           "revision": "34b09ec3d34648a5f409457b7c7ee7bab6ca78bd",
           "version": "0.25.0"
+        }
+      },
+      {
+        "package": "SWXMLHash",
+        "repositoryURL": "https://github.com/drmohundro/SWXMLHash",
+        "state": {
+          "branch": null,
+          "revision": "f43166a8e18fdd0857f29e303b1bb79a5428bca0",
+          "version": "4.9.0"
         }
       }
     ]
