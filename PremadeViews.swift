@@ -16,8 +16,12 @@ import Geometry
 
 class PremadeViews {
     func noteHead() -> StyledPath.Composite {
-        var notehead = NoteheadView(position: .zero, size: NoteheadView.Size(staffSlotHeight: 40, scale: 1)).rendered
+        var notehead = NoteheadView(position: .zero, size: NoteheadView.Size(staffSlotHeight: 40, scale: 2)).rendered
+//        var noteHead2 = NoteheadView(position: .zero, size: NoteVi)
         return notehead
+    }
+    func noteView() {
+        
     }
     
     func flat() -> StyledPath.Composite {
@@ -62,16 +66,16 @@ class PremadeViews {
     }
     
     func beamsAndNoteheads(externalPitches: [SpelledPitch]) -> StyledPath.Composite {
-        let rhythm = Rhythm(1/>4, [(4,event(())),(2,event(())),(1,event(())),(2,event(()))])
-        let beaming = DefaultBeamer.beaming(for: rhythm)
-        let configuration = BeamsView.Configuration(slope: -0.125)
-        let beamsView = BeamsView(
-                beaming: beaming,
-                positions: [100, 200, 300, 400],
-                configuration: configuration
-        )
+//        let rhythm = Rhythm(1/>4, [(4,event(())),(2,event(())),(1,event(())),(2,event(()))])
+//        let beaming = DefaultBeamer.beaming(for: rhythm)
+//        let configuration = BeamsView.Configuration(slope: -0.125)
+//        let beamsView = BeamsView(
+//                beaming: beaming,
+//                positions: [100, 200, 300, 400],
+//                configuration: configuration
+//        )
         
-        let pitches: [Pitch] = [60, 62, 63, 64, 66, 68, 83]
+//        let pitches: [Pitch] = [60, 62, 63, 64, 66, 68, 83]
 //        let spelled = pitches.map { $0.spelledWithDefaultSpelling }
         let representable = externalPitches.map { StaffRepresentablePitch($0) }
         let points = representable.map { StaffPointModel([$0]) }
@@ -108,5 +112,36 @@ class PremadeViews {
         
         let plot = builder.build()
         return plot
+    }
+    
+    func noteStem() -> StyledPath.Composite {
+        let pitches: [Pitch] = [64]
+        let spelled = pitches.map { $0.spelledWithDefaultSpelling }
+        let representable = spelled.map { StaffRepresentablePitch($0) }
+        let points = representable.map { StaffPointModel([$0]) }
+        
+        let noteWithStem = representable.map {
+            
+            StaffPointModel([$0]).stemConnectionPoint(from: VerticalDirection.above, axis: Clef(.treble))
+            
+        }
+        
+        print(noteWithStem)
+        
+        
+        let positions = (0..<pitches.count).map { Double($0) * 100 + 100 }
+        let builder = StaffModel.builder
+//        TODO: noteWithStem returns [StaffSlot] and not [StaffPointModel]
+        zip(positions, points).forEach { position, point in
+            builder.add(point, at: position)
+            
+//            builder.add(point, at: Double(noteWithStem[0]!) + 100)
+            
+        }
+        let model = builder.build()
+        
+        let staff = StaffView.Builder(model: model, configuration: StaffConfiguration()).build()
+        
+        return staff.rendered
     }
 }

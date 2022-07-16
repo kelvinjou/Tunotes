@@ -17,8 +17,8 @@ struct CALayerCreator: UIViewRepresentable {
     func makeUIView(context: Context) -> some UIView {
         let rect = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 2))
 //          MARK: for singular composite
-        let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes()))
-//        layer2.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
+//        let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes()))
+        let layer2 = CALayer(PremadeViews().noteStem())
         rect.layer.addSublayer(layer2)
 
         return rect
