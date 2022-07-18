@@ -10,30 +10,30 @@ import Math
 import Algorithms
 import Pitch
 
-extension OrderedIntervalDescriptor {
-
-    /// Creates an `OrderedIntervalDescriptor` with two `SpelledPitch` values.
-    public init(_ a: SpelledPitch, _ b: SpelledPitch) {
-        let (a,b,didSwap) = swapped(a,b) { a > b }
-        let (interval,steps) = intervalAndSteps(a,b)
-        let (quality,ordinal) = OrderedIntervalDescriptor.qualityAndOrdinal(interval: interval, steps: steps)
-        self.init(didSwap ? .descending : .ascending, ordinal, quality)
-    }
-}
-
-extension OrderedIntervalDescriptor.Ordinal: SpelledPitchConvertingIntervalOrdinal {
-
-    /// - Returns: The distance in semitones from an iedal interval at which point an interval
-    /// quality becomes diminished or augmented for a given `Ordinal`.
-    var platonicThreshold: Double {
-        switch self {
-        case .perfect:
-            return 1
-        case .imperfect:
-            return 1.5
-        }
-    }
-}
+//extension OrderedIntervalDescriptor {
+//
+//    /// Creates an `OrderedIntervalDescriptor` with two `SpelledPitch` values.
+//    public init(_ a: SpelledPitch, _ b: SpelledPitch) {
+//        let (a,b,didSwap) = swapped(a,b) { a > b }
+//        let (interval,steps) = intervalAndSteps(a,b)
+//        let (quality,ordinal) = OrderedIntervalDescriptor.qualityAndOrdinal(interval: interval, steps: steps)
+//        self.init(didSwap ? .descending : .ascending, ordinal, quality)
+//    }
+//}
+//
+//extension OrderedIntervalDescriptor.Ordinal: SpelledPitchConvertingIntervalOrdinal {
+//
+//    /// - Returns: The distance in semitones from an iedal interval at which point an interval
+//    /// quality becomes diminished or augmented for a given `Ordinal`.
+//    var platonicThreshold: Double {
+//        switch self {
+//        case .perfect:
+//            return 1
+//        case .imperfect:
+//            return 1.5
+//        }
+//    }
+//}
 
 /// - Returns: The "ideal" interval for the given amount of scalar steps between two
 /// `SpelledPitch` values.

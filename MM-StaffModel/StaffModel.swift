@@ -20,10 +20,12 @@ public struct StaffModel: VerticalPlotModel {
     public let verticalAxis: Clef
     public let horizontalAxis = DefaultAxis<Double>()
     public let points: [Double: [StaffPointModel]]
+    public let noteDuration: Double
     
     /// Createss a `StaffModel` with the given `clef` and the given `points`.
-    public init(clef: Clef = Clef(.treble), points: [Double: [StaffPointModel]]) {
+    public init(clef: Clef = Clef(.treble), points: [Double: [StaffPointModel]], noteDuration: Double) {
         self.verticalAxis = clef
         self.points = points
+        self.noteDuration = noteDuration
     }
 }

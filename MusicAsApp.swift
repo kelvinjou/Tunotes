@@ -233,13 +233,7 @@ enum MappingNoteToOffset: Double, CaseIterable {
 
 
 //create a struct that stores all neccessary info
-struct NoteModel {
-    var pitch: NotePitch
-    var octave: ClosedRange = 1...6
-    var duration: Double
-    
-    
-}
+
 
 // use modulus symbol to draw a line of notes that need a line
 

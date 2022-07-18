@@ -18,8 +18,12 @@ extension StaffModel {
         
         var clef: Clef = Clef(.treble)
         var points: [Double: [StaffPointModel]] = [:]
+        #warning("This is the MEAT!!!, given up here")
+        var noteDuration: Double = 1
         
-        public init() { }
+        public init() {
+
+        }
         
         public func set(_ clef: Clef) {
             self.clef = clef
@@ -30,7 +34,8 @@ extension StaffModel {
         }
         
         public func build() -> StaffModel {
-            return StaffModel(clef: clef, points: points)
+            
+            return StaffModel(clef: clef, points: points, noteDuration: noteDuration)
         }
     }
 }

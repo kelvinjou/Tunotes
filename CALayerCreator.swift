@@ -17,9 +17,11 @@ struct CALayerCreator: UIViewRepresentable {
     func makeUIView(context: Context) -> some UIView {
         let rect = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 2))
 //          MARK: for singular composite
-//        let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes()))
-        let layer2 = CALayer(PremadeViews().noteStem())
+        let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes()))
+//        let layer2 = CALayer(PremadeViews().staffWithLinesNoteheadsAndClef())
         rect.layer.addSublayer(layer2)
+//        rect.layer.addSublayer(drawLine(position: 105))
+//        rect.layer.addSublayer(drawLine(position: 205))
 
         return rect
         
@@ -28,63 +30,130 @@ struct CALayerCreator: UIViewRepresentable {
 //            let layer = CALayer(i)
 //            rect.layer.addSublayer(layer)
 //        }
-        //        return rect
+//                return rect
         
     }
     func updateUIView(_ uiView: UIViewType, context: Context) {}
     
-    func testAccessMeasureAndNotes() -> [SpelledPitch] {
+    func testAccessMeasureAndNotes() -> [NoteModel] {
         let score = MusicScore(url: ScoreSamples.url_spring1st)!
-
+        
         
 
-        var musicDuration: [NoteInScore] = []
-        var spelledPitch: [SpelledPitch] = []
+//        var musicDuration: [NoteInScore] = []
+        var noteModelArray: [NoteModel] = []
         var currentElement = 0
         print("Should have", score.musicParts[0].measures[0].notes.count, "Notes")
         for i in score.musicParts[0].measures[0].notes {
             
             print("End beat", i.duration)
-            var singularPitch = SpelledPitch(.b)
-            
+            var noteModel = NoteModel(spelledPitch: SpelledPitch(.b), duration: 0)
+
             if i.note.pitch.key.description == Keys.c.rawValue {
-                singularPitch = SpelledPitch(spelling: .c, octave: i.note.pitch.octave)
+                noteModel = NoteModel(
+                    spelledPitch: SpelledPitch(
+                        spelling: .c,
+                        octave: i.note.pitch.octave
+                    ),
+                    duration: i.duration)
+                
             }
             else if i.note.pitch.key.description == Keys.d.rawValue {
-                singularPitch = SpelledPitch(spelling: .d, octave: i.note.pitch.octave)
+                noteModel = NoteModel(
+                    spelledPitch: SpelledPitch(
+                        spelling: .d,
+                        octave: i.note.pitch.octave
+                    ),
+                    duration: i.duration)
             }
             else if i.note.pitch.key.description == Keys.e.rawValue {
-                singularPitch = SpelledPitch(spelling: .e, octave: i.note.pitch.octave)
+                noteModel = NoteModel(
+                    spelledPitch: SpelledPitch(
+                        spelling: .e,
+                        octave: i.note.pitch.octave
+                    ),
+                    duration: i.duration)
             }
             else if i.note.pitch.key.description == Keys.f.rawValue {
-                singularPitch = SpelledPitch(spelling: .f, octave: i.note.pitch.octave)
-            }
-            else if i.note.pitch.key.description == Keys.f.rawValue {
-                singularPitch = SpelledPitch(spelling: .f, octave: i.note.pitch.octave)
+                noteModel = NoteModel(
+                    spelledPitch: SpelledPitch(
+                        spelling: .f,
+                        octave: i.note.pitch.octave
+                    ),
+                    duration: i.duration)
             }
             else if i.note.pitch.key.description == Keys.g.rawValue {
-                singularPitch = SpelledPitch(spelling: .g, octave: i.note.pitch.octave)
+                noteModel = NoteModel(
+                    spelledPitch: SpelledPitch(
+                        spelling: .g,
+                        octave: i.note.pitch.octave
+                    ),
+                    duration: i.duration)
             }
             else if i.note.pitch.key.description == Keys.a.rawValue {
-                singularPitch = SpelledPitch(spelling: .a, octave: i.note.pitch.octave)
+                noteModel = NoteModel(
+                    spelledPitch: SpelledPitch(
+                        spelling: .a,
+                        octave: i.note.pitch.octave
+                    ),
+                    duration: i.duration)
             }
             else if i.note.pitch.key.description == Keys.b.rawValue {
-                singularPitch = SpelledPitch(spelling: .b, octave: i.note.pitch.octave)
+                noteModel = NoteModel(
+                    spelledPitch: SpelledPitch(
+                        spelling: .b,
+                        octave: i.note.pitch.octave
+                    ),
+                    duration: i.duration)
             }
             
-            spelledPitch.append(singularPitch)
+            noteModelArray.append(noteModel)
             currentElement += 1
             if currentElement == 9 {
-                print("PitchList count: ", singularPitch)
-                return spelledPitch
+                print("PitchList count: ", noteModel)
+                return noteModelArray
             }
         }
         return []
         
     }
+    
+    func drawLine(position: CGFloat) -> CAShapeLayer {
+        // Create a CAShapeLayer
+                let shapeLayer = CAShapeLayer()
+
+                // The Bezier path that we made needs to be converted to
+                // a CGPath before it can be used on a layer.
+                shapeLayer.path = drawUIBezierPath().cgPath
+
+                // apply other properties related to the path
+                shapeLayer.strokeColor = UIColor.gray.cgColor
+                shapeLayer.fillColor = UIColor.white.cgColor
+                shapeLayer.lineWidth = 5.0
+                shapeLayer.position = CGPoint(x: position, y: 10)
+
+                // add the new layer to our custom view
+                return shapeLayer
+    }
+    
+    func drawUIBezierPath() -> UIBezierPath {
+        // create a new path
+            let path = UIBezierPath()
+            path.move(to: CGPoint(x: 2, y: 100))
+            path.addLine(to: CGPoint(x: 2, y: 25))
+        
+            return path
+    }
 }
 
-enum Keys: String {
+struct NoteModel {
+    var spelledPitch: SpelledPitch
+    var duration: Double
+    
+    
+}
+
+enum Keys: String, CaseIterable {
     case c = "C"
     case d = "D"
     case e = "E"

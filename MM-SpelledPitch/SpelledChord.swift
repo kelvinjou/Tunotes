@@ -27,9 +27,9 @@ extension SpelledChord {
     }
 
     /// Creates a `SpelledChord` with the given `bass` pitch and the given `chordDescriptor`.
-    public init(_ bass: SpelledPitch, _ chordDescriptor: ChordDescriptor) {
-        self.pitches = [bass] + chordDescriptor.map { bass + $0 }
-    }
+//    public init(_ bass: SpelledPitch, _ chordDescriptor: ChordDescriptor) {
+//        self.pitches = [bass] + chordDescriptor.map { bass + $0 }
+//    }
 }
 
 extension SpelledChord: RandomAccessCollection {

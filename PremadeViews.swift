@@ -16,16 +16,15 @@ import Geometry
 
 class PremadeViews {
     func noteHead() -> StyledPath.Composite {
-        var notehead = NoteheadView(position: .zero, size: NoteheadView.Size(staffSlotHeight: 40, scale: 2)).rendered
-//        var noteHead2 = NoteheadView(position: .zero, size: NoteVi)
-        return notehead
+        let notehead = NoteheadView(position: .zero, size: NoteheadView.Size(staffSlotHeight: 40, scale: 2), noteDuration: 1)
+        return notehead.rendered
     }
     func noteView() {
         
     }
     
     func flat() -> StyledPath.Composite {
-        var flat = Sharp(position: Point(x: 0, y: 300), size: StaffItemSize(staffSlotHeight: StaffSlotHeight(5), scale: 2), color: .black).rendered
+        let flat = Sharp(position: Point(x: 0, y: 300), size: StaffItemSize(staffSlotHeight: StaffSlotHeight(5), scale: 2), color: .black).rendered
         return flat
     }
     
@@ -37,6 +36,7 @@ class PremadeViews {
         
         for clef in clefs {
             let builder = StaffView.Builder(clef: Clef(clef), configuration: StaffConfiguration())
+            
             builder.startLines(at: 0)
             builder.stopLines(at: 500)
             let staffView = builder.build()
@@ -53,11 +53,17 @@ class PremadeViews {
     func staffWithLinesNoteheadsAndClef() -> StyledPath.Composite {
         let pitches: [Pitch] = [60, 62, 63, 64, 66, 68, 71]
         let spelled = pitches.map { $0.spelledWithDefaultSpelling }
-        let representable = spelled.map { StaffRepresentablePitch($0) }
+        let representable = spelled.map { StaffRepresentablePitch($0, .ord) }
+//        Notehead
         let points = representable.map { StaffPointModel([$0]) }
         let positions = (0..<pitches.count).map { Double($0) * 100 + 100 }
         let builder = StaffModel.builder
-        zip(positions, points).forEach { position, point in builder.add(point, at: position) }
+        zip(positions, points).forEach { position, point in
+//            point.stemConnectionPoint(from: .above, axis: Clef(.treble))
+            builder.add(point, at: position)
+
+        }
+        
         let model = builder.build()
         
         let staff = StaffView.Builder(model: model, configuration: StaffConfiguration()).build()
@@ -65,7 +71,7 @@ class PremadeViews {
         return staff.rendered
     }
     
-    func beamsAndNoteheads(externalPitches: [SpelledPitch]) -> StyledPath.Composite {
+    func beamsAndNoteheads(externalPitches: [NoteModel]) -> StyledPath.Composite {
 //        let rhythm = Rhythm(1/>4, [(4,event(())),(2,event(())),(1,event(())),(2,event(()))])
 //        let beaming = DefaultBeamer.beaming(for: rhythm)
 //        let configuration = BeamsView.Configuration(slope: -0.125)
@@ -77,16 +83,23 @@ class PremadeViews {
         
 //        let pitches: [Pitch] = [60, 62, 63, 64, 66, 68, 83]
 //        let spelled = pitches.map { $0.spelledWithDefaultSpelling }
-        let representable = externalPitches.map { StaffRepresentablePitch($0) }
+        let representable = externalPitches.map {
+            StaffRepresentablePitch($0.spelledPitch)
+        }
+        #warning("Get note duration here")
         let points = representable.map { StaffPointModel([$0]) }
         
         let positions = (0..<externalPitches.count).map { Double($0) * 100 + 100 }
+        #warning("Setting note duration")
         let builder = StaffModel.builder
-        zip(positions, points).forEach { position, point in builder.add(point, at: position) }
+//        builder.noteDuration = 2
+        
+        zip(positions, points).forEach {
+            position, point in builder.add(point, at: position)
+        }
         
         let model = builder.build()
         let staff = StaffView(model: model)
-        
         let newBeam = Beam(start: Point(x: 1, y: 1), end: Point(x: 2, y: 2), width: 1)
         let score = ScoreView(beams: BeamsView(beams: [newBeam], color: .black), staff: staff).rendered.resizedToFitContents
         
@@ -114,34 +127,51 @@ class PremadeViews {
         return plot
     }
     
-    func noteStem() -> StyledPath.Composite {
-        let pitches: [Pitch] = [64]
-        let spelled = pitches.map { $0.spelledWithDefaultSpelling }
-        let representable = spelled.map { StaffRepresentablePitch($0) }
-        let points = representable.map { StaffPointModel([$0]) }
-        
-        let noteWithStem = representable.map {
-            
-            StaffPointModel([$0]).stemConnectionPoint(from: VerticalDirection.above, axis: Clef(.treble))
-            
-        }
-        
-        print(noteWithStem)
-        
-        
-        let positions = (0..<pitches.count).map { Double($0) * 100 + 100 }
-        let builder = StaffModel.builder
-//        TODO: noteWithStem returns [StaffSlot] and not [StaffPointModel]
-        zip(positions, points).forEach { position, point in
-            builder.add(point, at: position)
-            
-//            builder.add(point, at: Double(noteWithStem[0]!) + 100)
-            
-        }
-        let model = builder.build()
-        
-        let staff = StaffView.Builder(model: model, configuration: StaffConfiguration()).build()
-        
-        return staff.rendered
+//    func noteStem() -> StyledPath.Composite {
+//        let pitches: [Pitch] = [64]
+//        let spelled = pitches.map { $0.spelledWithDefaultSpelling }
+//        let representable = spelled.map { StaffRepresentablePitch($0) }
+//        let points = representable.map { StaffPointModel([$0]) }
+//
+//        let noteWithStem = representable.map {
+//
+//            StaffPointModel([$0]).stemConnectionPoint(from: VerticalDirection.above, axis: Clef(.treble))
+//
+//        }
+//
+//        print(noteWithStem)
+//
+//
+//        let positions = (0..<pitches.count).map { Double($0) * 100 + 100 }
+//        let builder = StaffModel.builder
+////        TODO: noteWithStem returns [StaffSlot] and not [StaffPointModel]
+//        zip(positions, points).forEach { position, point in
+//            builder.add(point, at: position)
+//
+////            builder.add(point, at: Double(noteWithStem[0]!) + 100)
+//
+//        }
+//
+//        let model = builder.build()
+//
+//        let staff = StaffView.Builder(model: model, configuration: StaffConfiguration()).build()
+//
+//        return staff.rendered
+//    }
+    
+    func rhythmView() -> StyledPath.Composite {
+        let configuration = BeamsView.Configuration(orientation: .stemsDown, slope: -0.125)
+        let beamsView = BeamsView(
+            beaming: Beaming(beamCounts: [1, 2, 3, 3]),
+            positions: [100, 200, 300, 400],
+            configuration: configuration
+        )
+//        BeamsView.Configuration(orientation: .stemsDown)
+                
+        let rhy = RhythmView(beamsView: beamsView)
+//        let durationTree = DurationTree(13/>64, .branch(1, [1, 2, 4]))
+//        Rhythm(durationTree, <#T##leaves: [Rhythm<_>.Context]##[Rhythm<_>.Context]#>)
+        return rhy.rendered
     }
+    
 }

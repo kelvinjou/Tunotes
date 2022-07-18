@@ -39,15 +39,16 @@ extension SpelledDyad {
 
     /// - Returns: `UnorderedSpelledInterval`, which does not retain the objective order of this
     /// `SpelledDyad` nor its octave displacement.
-    public var unorderedInterval: UnorderedIntervalDescriptor {
-        return UnorderedIntervalDescriptor(lower.spelling, higher.spelling)
-    }
-
-    /// - Returns: `CompoundSpelledInterval`, which retains the objective order of this
-    /// `SpelledDyad`, though not its octave displacement.
-    public var orderedInterval: CompoundIntervalDescriptor {
-        return CompoundIntervalDescriptor(lower, higher)
-    }
+//    public var unorderedInterval: UnorderedIntervalDescriptor {
+//        return UnorderedIntervalDescriptor(lower.spelling, higher.spelling)
+//    }
+//
+//    /// - Returns: `CompoundSpelledInterval`, which retains the objective order of this
+//    /// `SpelledDyad`, though not its octave displacement.
+//    public var orderedInterval: CompoundIntervalDescriptor {
+//        return CompoundIntervalDescriptor(lower, higher)
+//    }
+//}
 }
 
 extension SpelledDyad: Equatable { }

@@ -8,6 +8,7 @@ import MusicSymbol
 struct ContentView: View {
     var body: some View {
         ScrollView(.horizontal) {
+//            fillingPath()
             HStack {
                 CALayerCreator()
                     .offset(y: UIScreen.main.bounds.height / 3)
@@ -15,8 +16,12 @@ struct ContentView: View {
                     .padding(35)
                     .padding(.trailing, 300)
             }
-            
+            .onAppear {
+                TempoResearch().testMeters()
+            }
         }
     }
- 
 }
+
+
+        
