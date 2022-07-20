@@ -124,23 +124,32 @@ extension StaffView {
             self.configuration = configuration
 
             startLines(at: 0)
+            
             for (position, points) in model {
+                
                 startLines(at: position)
-                for point in points {
-                    let (above, below) = point.ledgerLines(model.verticalAxis)
-                    #warning("something goign on here too")
-                    addLedgerLines(at: position, above: above, below: below)
-                    let pointView = PointView(
-                        of: point,
-                        at: position,
-                        clef: model.verticalAxis,
-                        staffSlotHeight: configuration.staffSlotHeight,
-                        noteDuration: 1
-                    )
+                    for point in points {
+                        let (above, below) = point.ledgerLines(model.verticalAxis)
 
-                    self.points.append(pointView)
-                }
+                        addLedgerLines(at: position, above: above, below: below)
+                        let pointView = PointView(
+                            of: point,
+                            at: position,
+                            clef: model.verticalAxis,
+                            staffSlotHeight: configuration.staffSlotHeight,
+                            
+                            noteDuration: 
+                                model.noteDuration[(Int(position - 100) / 100)]
+
+                        )
+                        print("points", position)
+
+                        self.points.append(pointView)
+                    }
+
+                
             }
+            
 
             // FIXME: Probably done from the outside
             stopLines(at: model.points.keys.max()! + 100)
@@ -188,6 +197,9 @@ extension StaffView {
 
             return StaffClefView.makeClef(clef.kind, at: position, with: clefConfig)
         }
+        private func zip3<S1: Sequence, S2: Sequence, S3: Sequence>(_ s1: S1, _ s2: S2, _ s3: S3) -> Zip3Sequence<S1.Element, S2.Element, S3.Element> {
+            return Zip3Sequence(s1, s2, s3)
+        }
     }
 }
 
@@ -200,7 +212,6 @@ extension StaffView.PointView {
             let slot = clef.coordinate(element.spelledPitch)
             let altitude = StaffSlotHeight(4 - slot) * staffSlotHeight
             
-            #warning("USED HERE AS WELL --> noteDuration value defined here")
             return StaffRepresentedPitch(
                 for: element,
                 at: position,

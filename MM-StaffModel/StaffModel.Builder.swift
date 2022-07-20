@@ -17,9 +17,8 @@ extension StaffModel {
     public final class Builder {
         
         var clef: Clef = Clef(.treble)
-        var points: [Double: [StaffPointModel]] = [:]
-        #warning("This is the MEAT!!!, given up here")
-        var noteDuration: Double = 1
+        var points: [Double : [StaffPointModel] ] = [:]
+        var noteDurations: [Double : [Double] ] = [:]
         
         public init() {
 
@@ -29,13 +28,25 @@ extension StaffModel {
             self.clef = clef
         }
         
-        public func add(_ point: Point, at position: Double) {
+        public func add(_ point: Point, at position: Double, noteDuration: Double) {
             points[position, default: []].append(point)
+            noteDurations[position, default: []].append(noteDuration)
+//            points1[position, default: [[:]] ].append([point : noteDuration])
         }
         
         public func build() -> StaffModel {
+            var noteDurationArray: [Double] = []
             
-            return StaffModel(clef: clef, points: points, noteDuration: noteDuration)
+            let sorted = noteDurations.sorted {
+                return $0.key < $1.key
+            }
+            for (_, j) in sorted {
+                for x in j {
+                    noteDurationArray.append(x)
+                }
+            }
+            print("This array", noteDurationArray)
+            return StaffModel(clef: clef, points: points, noteDuration: noteDurationArray)
         }
     }
 }

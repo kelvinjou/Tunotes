@@ -10,6 +10,8 @@
 /// - TODO: Inject transposition as instance property. 
 public struct StaffModel: VerticalPlotModel {
     
+    
+    
     /// - TODO: In Swift 4, there are associated type constraints. These typealiases should be
     /// inferrable by the relationship betwen `StaffModel` and `Clef`.
     public typealias Point = StaffPointModel
@@ -20,10 +22,10 @@ public struct StaffModel: VerticalPlotModel {
     public let verticalAxis: Clef
     public let horizontalAxis = DefaultAxis<Double>()
     public let points: [Double: [StaffPointModel]]
-    public let noteDuration: Double
+    public let noteDuration: [Double]
     
     /// Createss a `StaffModel` with the given `clef` and the given `points`.
-    public init(clef: Clef = Clef(.treble), points: [Double: [StaffPointModel]], noteDuration: Double) {
+    public init(clef: Clef = Clef(.treble), points: [Double: [StaffPointModel]], noteDuration: [Double]) {
         self.verticalAxis = clef
         self.points = points
         self.noteDuration = noteDuration

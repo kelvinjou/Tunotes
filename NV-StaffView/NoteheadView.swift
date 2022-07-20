@@ -16,21 +16,24 @@ public class NoteheadView: Renderable {
 
         public let staffSlotHeight: StaffSlotHeight
         public let scale: Double
-        public let noteDuration: Double
+//        public let noteDuration: Double
 
-        public init(staffSlotHeight: StaffSlotHeight, scale: Double = 1, noteDuration: Double = 1) {
+        public init(staffSlotHeight: StaffSlotHeight, scale: Double = 1) {
             self.staffSlotHeight = staffSlotHeight
             self.scale = scale
-            self.noteDuration = noteDuration
+//            self.noteDuration = noteDuration
         }
     }
     
     public var rendered: StyledPath.Composite {
 //        let styling = Styling(fill: Fill(color: Color(white: 0.5, alpha: 1)))
 
-//        quarter note
-        let styling = Styling(fill: Fill(color: Color(white: 1, alpha: 0), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
+        print("Inside NoteheadView", noteDuration)
+        
+        let styling = Styling(fill: Fill(color: Color(white: noteDuration == 2.0 ? 1 : 0, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
         let styledPath = StyledPath(frame: frame, path: path, styling: styling)
+        
+//        let styledPath1 = StyledPath(frame: frame, path: path1, styling: styling)
         let leaf: StyledPath.Composite = .leaf(.path(styledPath))
         return leaf
     }
@@ -39,6 +42,13 @@ public class NoteheadView: Renderable {
         return Path
             .ellipse(in: Rectangle(x: 0, y: 0, width: width, height: height))
             .rotated(by: Angle(degrees: 45), around: Point(x: 0.5 * width, y: 0.5 * height))
+            
+            
+    }
+    
+    private var path1: Path {
+        Path
+            .line(from: Point(CGPoint(x: 0, y: 0)), to: Point(CGPoint(x: 0, y: 100)))
     }
     
     

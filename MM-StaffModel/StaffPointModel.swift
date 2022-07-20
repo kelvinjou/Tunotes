@@ -13,7 +13,12 @@
 /// - TODO: Articulations
 /// - TODO: Articulation positioning
 ///
-public struct StaffPointModel: PointModel {
+public struct StaffPointModel: PointModel, Hashable, Comparable {
+    public static func < (lhs: StaffPointModel, rhs: StaffPointModel) -> Bool {
+        return lhs.lowest! < rhs.lowest!
+//        return true
+    }
+    
     
     public typealias HorizontalAxis = Clef
     public typealias VerticalAxis = Clef
