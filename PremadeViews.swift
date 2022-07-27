@@ -32,7 +32,6 @@ class PremadeViews {
     func staffLinesAndClef() -> [StyledPath.Composite] {
         let clefs: [Clef.Kind] = [.tenor]
         var currentElement = 0
-        
         var renderedViews = [StyledPath.Composite]()
         
         for clef in clefs {

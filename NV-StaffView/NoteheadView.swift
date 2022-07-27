@@ -31,7 +31,7 @@ public class NoteheadView: Renderable {
         print("Inside NoteheadView", noteDuration)
         
         let styling = Styling(fill: Fill(color: Color(white: noteDuration == 2.0 ? 1 : 0, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
-        let styledPath = StyledPath(frame: frame, path: path, styling: styling)
+        let styledPath = StyledPath(frame: frame, path: cgPathElementAttempt, styling: styling)
         
 //        let styledPath1 = StyledPath(frame: frame, path: path1, styling: styling)
         let leaf: StyledPath.Composite = .leaf(.path(styledPath))
@@ -49,17 +49,29 @@ public class NoteheadView: Renderable {
             .rotated(by: Angle(degrees: 45), around: Point(x: 0.5 * width, y: 0.5 * height))
     }
     
-    public var renderStem: StyledPath.Composite {
-        let styling = Styling(fill: Fill(color: Color(white: 0, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
-        let styledPath = StyledPath(frame: frame, path: path1, styling: styling)
-        let leaf: StyledPath.Composite = .leaf(.path(styledPath))
+//    public var renderStem: StyledPath.Composite {
+//        let styling = Styling(fill: Fill(color: Color(white: 0, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
+//        let styledPath = StyledPath(frame: frame, path: path1, styling: styling)
+//        let leaf: StyledPath.Composite = .leaf(.path(styledPath))
+//
+//        return leaf
+//    }
+//
+    private var cgPathElementAttempt: Path {
+        var ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+
+        ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
+        ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
+        ovalPath.move(to: CGPoint(x: 0, y: 10))
+        ovalPath.addLine(to: CGPoint(x: 0, y: 110))
+        ovalPath.move(to: CGPoint(x: 0, y: 110))
+        ovalPath.addLine(to: CGPoint(x: 20, y: 105))
+        ovalPath.close()
+
         
-        return leaf
-    }
-    
-    private var path1: Path {
-        Path
-            .line(from: Point(CGPoint(x: 0, y: 0)), to: Point(CGPoint(x: 0, y: 100)))
+        
+        return Path
+            .init(ovalPath.cgPath)
     }
     
     
