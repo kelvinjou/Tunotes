@@ -12,16 +12,17 @@ import QuartzAdapter
 import SwiftUI
 import Rendering
 import UIKit
+import Path
 
 struct CALayerCreator: UIViewRepresentable {
     func makeUIView(context: Context) -> some UIView {
         let rect = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 2))
 //          MARK: for singular composite
         let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes()))
-//        let layer2 = CALayer(PremadeViews().staffWithLinesNoteheadsAndClef())
+//        let layer3 = CALayer(PremadeViews().noteStem())
+//        let layer2 = CALayer(PremadeViews().noteHead())
         rect.layer.addSublayer(layer2)
-//        rect.layer.addSublayer(drawLine(position: 105))
-//        rect.layer.addSublayer(drawLine(position: 205))
+//        rect.layer.addSublayer(layer3)
 
         return rect
         
@@ -33,7 +34,7 @@ struct CALayerCreator: UIViewRepresentable {
 //                return rect
         
     }
-    func updateUIView(_ uiView: UIViewType, context: Context) {}
+        func updateUIView(_ uiView: UIViewType, context: Context) {}
     
     func testAccessMeasureAndNotes() -> [NoteModel] {
         let score = MusicScore(url: ScoreSamples.url_spring1st)!

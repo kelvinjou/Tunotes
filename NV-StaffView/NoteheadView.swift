@@ -40,10 +40,21 @@ public class NoteheadView: Renderable {
     
     private var path: Path {
         return Path
+//            .init(pathElements: [
+//                PathElement.move(Point(CGPoint(x: 0, y: 0))),
+//                PathElement.move(Point(CGPoint(x: 0, y: 100))),
+//
+//            ])
             .ellipse(in: Rectangle(x: 0, y: 0, width: width, height: height))
             .rotated(by: Angle(degrees: 45), around: Point(x: 0.5 * width, y: 0.5 * height))
-            
-            
+    }
+    
+    public var renderStem: StyledPath.Composite {
+        let styling = Styling(fill: Fill(color: Color(white: 0, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
+        let styledPath = StyledPath(frame: frame, path: path1, styling: styling)
+        let leaf: StyledPath.Composite = .leaf(.path(styledPath))
+        
+        return leaf
     }
     
     private var path1: Path {
