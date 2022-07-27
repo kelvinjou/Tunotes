@@ -26,50 +26,63 @@ public class NoteheadView: Renderable {
     }
     
     public var rendered: StyledPath.Composite {
-//        let styling = Styling(fill: Fill(color: Color(white: 0.5, alpha: 1)))
-
         print("Inside NoteheadView", noteDuration)
+        var pathNote: Path = path
+        var noteIsWhite: Double = 0 // 0 = black, 1 = white
+        switch noteDuration {
+        case 0.25:
+            pathNote = sixteenthNote
+            noteIsWhite = 0
+        case 2.0:
+            pathNote = halfNote
+            noteIsWhite = 1
+        default:
+            break
+        }
+        let styling = Styling(fill: Fill(color: Color(white: noteIsWhite, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
         
-        let styling = Styling(fill: Fill(color: Color(white: noteDuration == 2.0 ? 1 : 0, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
-        let styledPath = StyledPath(frame: frame, path: cgPathElementAttempt, styling: styling)
         
-//        let styledPath1 = StyledPath(frame: frame, path: path1, styling: styling)
+        
+        let styledPath = StyledPath(frame: frame, path: pathNote, styling: styling)
+
         let leaf: StyledPath.Composite = .leaf(.path(styledPath))
         return leaf
     }
     
     private var path: Path {
         return Path
-//            .init(pathElements: [
-//                PathElement.move(Point(CGPoint(x: 0, y: 0))),
-//                PathElement.move(Point(CGPoint(x: 0, y: 100))),
-//
-//            ])
             .ellipse(in: Rectangle(x: 0, y: 0, width: width, height: height))
             .rotated(by: Angle(degrees: 45), around: Point(x: 0.5 * width, y: 0.5 * height))
     }
+
+    private var sixteenthNote: Path {
+        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+
+        ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
+        ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
+        ovalPath.move(to: CGPoint(x: 0, y: 10))
+        ovalPath.addLine(to: CGPoint(x: 0, y: 110))
+        // sixteenth note stem
+        ovalPath.move(to: CGPoint(x: 0, y: 100))
+        ovalPath.addLine(to: CGPoint(x: 20, y: 95))
+        // bottom stem
+        ovalPath.move(to: CGPoint(x: 0, y: 110))
+        ovalPath.addLine(to: CGPoint(x: 20, y: 105))
+        ovalPath.close()
+        return Path
+            .init(ovalPath.cgPath)
+    }
     
-//    public var renderStem: StyledPath.Composite {
-//        let styling = Styling(fill: Fill(color: Color(white: 0, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
-//        let styledPath = StyledPath(frame: frame, path: path1, styling: styling)
-//        let leaf: StyledPath.Composite = .leaf(.path(styledPath))
-//
-//        return leaf
-//    }
-//
-    private var cgPathElementAttempt: Path {
+    private var halfNote: Path {
         var ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
 
         ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
         ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
         ovalPath.move(to: CGPoint(x: 0, y: 10))
         ovalPath.addLine(to: CGPoint(x: 0, y: 110))
-        ovalPath.move(to: CGPoint(x: 0, y: 110))
-        ovalPath.addLine(to: CGPoint(x: 20, y: 105))
+//        ovalPath.move(to: CGPoint(x: 0, y: 110))
+//        ovalPath.addLine(to: CGPoint(x: 20, y: 105))
         ovalPath.close()
-
-        
-        
         return Path
             .init(ovalPath.cgPath)
     }
