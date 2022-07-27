@@ -24,17 +24,17 @@ extension Pitch {
         // MARK: - Initializers
 
         /// Creates a Pitch.Spelling with the given `letterName` and the given `modifier`.
-        public init(_ letterName: LetterName, _ modifier: Modifier = .natural) {
+        public init(_ letterName: LetterName, _ modifier: Modifier) {
             self.letterName = letterName
             self.modifier = modifier
         }
 
+        #warning("what is alterations")
         public init(
             _ letterName: LetterName,
             _ base: Modifier.Pythagorean = .natural,
             _ alterations: Modifier.Alteration...
-        )
-        {
+        ) {
             self.letterName = letterName
             self.modifier = Modifier(base, alterations)
         }

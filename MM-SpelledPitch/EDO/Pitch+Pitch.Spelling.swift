@@ -41,7 +41,8 @@ extension Pitch {
         }
         let currentOctave = Int(floor(value.value / 12.0)) - 1
         let octave = currentOctave - reachAroundAdjustment(for: spelling)
-        return SpelledPitch(spelling, octave)
+        #warning("something sketchy here?")
+        return SpelledPitch(spelling, .natural, octave)
     }
 
     /// - Returns: `SpelledPitch` with the default spelling for this `Pitch`.

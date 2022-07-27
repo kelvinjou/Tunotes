@@ -6,13 +6,14 @@
 //
 
 import MusicScore
-import MusicSymbol
+//import MusicSymbol
 import QuartzCore
 import QuartzAdapter
 import SwiftUI
 import Rendering
 import UIKit
 import Path
+import Pitch
 
 struct CALayerCreator: UIViewRepresentable {
     func makeUIView(context: Context) -> some UIView {
@@ -44,66 +45,78 @@ struct CALayerCreator: UIViewRepresentable {
 //        var musicDuration: [NoteInScore] = []
         var noteModelArray: [NoteModel] = []
         var currentElement = 0
-        print("Should have", score.musicParts[0].measures[1].notes.count, "Notes")
-        for i in score.musicParts[0].measures[1].notes {
+        print("Should have", score.musicParts[0].measures[2].notes.count, "Notes")
+        for i in score.musicParts[0].measures[2].notes {
             #warning("A♯ is not matching to expected 'A', will have to only feed in the first String and have the accidental be detected by another parameter that controls sharps and flats")
             print("Note tune", i.note.pitch.key.description)
-            var noteModel = NoteModel(spelledPitch: SpelledPitch(.b), duration: 0)
+            
+            let fullDesc = i.note.pitch.key.description
+            let notePitch = fullDesc[0]
+            let rawAccidental = fullDesc[1]
+            
+            var accidental: Pitch.Spelling.Modifier = .natural
+            rawAccidental.map { value in
+                if value == "♯" {
+                    accidental = .sharp
+                }
+            }
+            
+            var noteModel = NoteModel(spelledPitch: SpelledPitch(.b, .natural), duration: 0)
 
-            if i.note.pitch.key.description == Keys.c.rawValue {
+            if notePitch == Keys.c.rawValue {
                 noteModel = NoteModel(
                     spelledPitch: SpelledPitch(
                         spelling: .c,
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
-                
+
             }
-            else if i.note.pitch.key.description == Keys.d.rawValue {
+            else if notePitch == Keys.d.rawValue {
                 noteModel = NoteModel(
                     spelledPitch: SpelledPitch(
-                        spelling: .d,
+                        spelling: Pitch.Spelling(.d, accidental),
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
             }
-            else if i.note.pitch.key.description == Keys.e.rawValue {
+            else if notePitch == Keys.e.rawValue {
                 noteModel = NoteModel(
                     spelledPitch: SpelledPitch(
-                        spelling: .e,
+                        spelling: Pitch.Spelling(.e, accidental),
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
             }
-            else if i.note.pitch.key.description == Keys.f.rawValue {
+            else if notePitch == Keys.f.rawValue {
                 noteModel = NoteModel(
                     spelledPitch: SpelledPitch(
-                        spelling: .f,
+                        spelling: Pitch.Spelling(.f, accidental),
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
             }
-            else if i.note.pitch.key.description == Keys.g.rawValue {
+            else if notePitch == Keys.g.rawValue {
                 noteModel = NoteModel(
                     spelledPitch: SpelledPitch(
-                        spelling: .g,
+                        spelling: Pitch.Spelling(.g, accidental),
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
             }
-            
-            else if i.note.pitch.key.description == Keys.a.rawValue {
+
+            else if notePitch == Keys.a.rawValue {
                 noteModel = NoteModel(
                     spelledPitch: SpelledPitch(
-                        spelling: .a,
+                        spelling: Pitch.Spelling(.a, accidental),
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
             }
-            else if i.note.pitch.key.description == Keys.b.rawValue {
+            else if notePitch == Keys.b.rawValue {
                 noteModel = NoteModel(
                     spelledPitch: SpelledPitch(
-                        spelling: .b,
+                        spelling: Pitch.Spelling(.b, accidental),
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
@@ -166,3 +179,29 @@ enum Keys: String, CaseIterable {
 }
 
 
+extension String {
+
+    var length: Int {
+        return count
+    }
+
+    subscript (i: Int) -> String {
+        return self[i ..< i + 1]
+    }
+
+    func substring(fromIndex: Int) -> String {
+        return self[min(fromIndex, length) ..< length]
+    }
+
+    func substring(toIndex: Int) -> String {
+        return self[0 ..< max(0, toIndex)]
+    }
+
+    subscript (r: Range<Int>) -> String {
+        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
+                                            upper: min(length, max(0, r.upperBound))))
+        let start = index(startIndex, offsetBy: range.lowerBound)
+        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
+        return String(self[start ..< end])
+    }
+}

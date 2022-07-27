@@ -15,7 +15,7 @@ public struct SpelledPitch {
 
     /// The `Pitch.Spelling` defining a `SpelledPitch`.
     public let spelling: Pitch.Spelling
-    
+//    public let accidental: Pitch.Spelling.Modifier
     /// The `octave` defining a `SpelledPitch`
     public let octave: Int
 }
@@ -26,7 +26,7 @@ extension SpelledPitch {
 
     /// The `c natural` nearest to the middle of an 88-key piano.
     public static var middleC: SpelledPitch {
-        return .init(.c, 4)
+        return .init(spelling: .c, octave: 4)
     }
 }
 
@@ -35,8 +35,9 @@ extension SpelledPitch {
     // MARK: - Initializers
 
     /// Creates a `SpelledPitch` with a given `spelling` in displaced by the given `octave`.
-    public init(_ spelling: Pitch.Spelling, _ octave: Int = 4) {
+    public init(_ spelling: Pitch.Spelling, _ accidental: Pitch.Spelling.Modifier, _ octave: Int = 4) {
         self.spelling = spelling
+//        self.accidental = accidental
         self.octave = octave
     }
 }

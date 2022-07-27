@@ -16,7 +16,6 @@ public struct StaffRepresentablePitch {
     
     /// Creates a `StaffRepresentablePitch` with a `SpelledPitch` and `Notehead`.
     public init(_ spelledPitch: SpelledPitch, _ notehead: Notehead = .ord
-//                , _ accidental: Pitch.Spelling.Modifier
     ){
         self.spelledPitch = spelledPitch
         self.notehead = notehead
