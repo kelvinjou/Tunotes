@@ -30,14 +30,24 @@ public class NoteheadView: Renderable {
         var pathNote: Path = path
         var noteIsWhite: Double = 0 // 0 = black, 1 = white
         switch noteDuration {
+        case 0.0:
+            pathNote = wholeNote
+            noteIsWhite = 1
         case 0.25:
             pathNote = sixteenthNote
+            noteIsWhite = 0
+        case 0.5:
+            pathNote = eighthNote
+            noteIsWhite = 0
+        case 1.5:
+            pathNote = dottedQuarterNote
             noteIsWhite = 0
         case 2.0:
             pathNote = halfNote
             noteIsWhite = 1
         default:
-            break
+            pathNote = halfNote
+            noteIsWhite = 0
         }
         let styling = Styling(fill: Fill(color: Color(white: noteIsWhite, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
         
@@ -73,6 +83,36 @@ public class NoteheadView: Renderable {
             .init(ovalPath.cgPath)
     }
     
+    private var eighthNote: Path {
+        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+
+        ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
+        ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
+        ovalPath.move(to: CGPoint(x: 0, y: 10))
+        ovalPath.addLine(to: CGPoint(x: 0, y: 110))
+        ovalPath.move(to: CGPoint(x: 0, y: 110))
+        ovalPath.addLine(to: CGPoint(x: 20, y: 105))
+        ovalPath.close()
+        return Path
+            .init(ovalPath.cgPath)
+    }
+    private var dottedQuarterNote: Path {
+        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+        
+        ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
+        ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
+        ovalPath.move(to: CGPoint(x: 0, y: 10))
+        ovalPath.addLine(to: CGPoint(x: 0, y: 110))
+        ovalPath.close()
+        let dotPath = UIBezierPath(ovalIn: CGRect(x: 40, y: 0, width: 5, height: 5))
+        
+        let combined = UIBezierPath()
+        combined.append(ovalPath)
+        combined.append(dotPath)
+        return Path
+            .init(combined.cgPath)
+    }
+    
     private var halfNote: Path {
         var ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
 
@@ -86,6 +126,15 @@ public class NoteheadView: Renderable {
         return Path
             .init(ovalPath.cgPath)
     }
+    
+    private var wholeNote: Path {
+        var ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+        ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
+        ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
+        return Path
+            .init(ovalPath.cgPath)
+    }
+    
     
     
     private var frame: Rectangle {
@@ -119,7 +168,7 @@ public class NoteheadView: Renderable {
     }
 }
 
-enum NoteDuration: Int {
+enum NoteDuration: Double {
     case sixteenth
     case eighth
     case quarter

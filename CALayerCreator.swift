@@ -34,7 +34,7 @@ struct CALayerCreator: UIViewRepresentable {
 //                return rect
         
     }
-        func updateUIView(_ uiView: UIViewType, context: Context) {}
+    func updateUIView(_ uiView: UIViewType, context: Context) {}
     
     func testAccessMeasureAndNotes() -> [NoteModel] {
         let score = MusicScore(url: ScoreSamples.url_spring1st)!
@@ -44,10 +44,10 @@ struct CALayerCreator: UIViewRepresentable {
 //        var musicDuration: [NoteInScore] = []
         var noteModelArray: [NoteModel] = []
         var currentElement = 0
-        print("Should have", score.musicParts[0].measures[0].notes.count, "Notes")
-        for i in score.musicParts[0].measures[0].notes {
-            
-            print("End beat", i.duration)
+        print("Should have", score.musicParts[0].measures[1].notes.count, "Notes")
+        for i in score.musicParts[0].measures[1].notes {
+            #warning("A♯ is not matching to expected 'A', will have to only feed in the first String and have the accidental be detected by another parameter that controls sharps and flats")
+            print("Note tune", i.note.pitch.key.description)
             var noteModel = NoteModel(spelledPitch: SpelledPitch(.b), duration: 0)
 
             if i.note.pitch.key.description == Keys.c.rawValue {
@@ -91,6 +91,7 @@ struct CALayerCreator: UIViewRepresentable {
                     ),
                     duration: i.duration)
             }
+            
             else if i.note.pitch.key.description == Keys.a.rawValue {
                 noteModel = NoteModel(
                     spelledPitch: SpelledPitch(

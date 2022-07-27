@@ -26,5 +26,3 @@ public struct ScoreView: Renderable {
         return composite.resizedToFitContents
     }
 }
-
-//Will have to find a way to display a tree (branch and leaf)

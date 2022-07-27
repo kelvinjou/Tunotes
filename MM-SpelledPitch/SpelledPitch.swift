@@ -15,7 +15,7 @@ public struct SpelledPitch {
 
     /// The `Pitch.Spelling` defining a `SpelledPitch`.
     public let spelling: Pitch.Spelling
-
+    
     /// The `octave` defining a `SpelledPitch`
     public let octave: Int
 }
