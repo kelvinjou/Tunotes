@@ -103,6 +103,7 @@ struct CALayerCreator: UIViewRepresentable {
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
+                print(noteModel)
             }
 
             else if notePitch == Keys.a.rawValue {
@@ -124,7 +125,7 @@ struct CALayerCreator: UIViewRepresentable {
             
             noteModelArray.append(noteModel)
             currentElement += 1
-            if currentElement == 9 {
+            if currentElement == i.note.pitch.description.count {
                 print("PitchList count: ", noteModel)
                 return noteModelArray
             }

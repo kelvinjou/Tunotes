@@ -78,6 +78,9 @@ class PremadeViews {
         
 //        let pitches: [Pitch] = [60, 62, 63, 64, 66, 68, 83]
 //        let spelled = pitches.map { $0.spelledWithDefaultSpelling }
+//        print(externalPitches)
+        
+        #warning("external pitch has 0 values")
         let representable = externalPitches.map {
             StaffRepresentablePitch($0.spelledPitch)
         }
