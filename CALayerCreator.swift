@@ -44,9 +44,12 @@ struct CALayerCreator: UIViewRepresentable {
 
 //        var musicDuration: [NoteInScore] = []
         var noteModelArray: [NoteModel] = []
+        var numberOfNotes: Int = 0
         var currentElement = 0
-        print("Should have", score.musicParts[0].measures[2].notes.count, "Notes")
-        for i in score.musicParts[0].measures[2].notes {
+        for i in 0..<score.musicParts[0].measures.count {
+            print("measure \(i)")
+        print("\t Should have", score.musicParts[0].measures[i].notes.count, "Notes")
+        for i in score.musicParts[0].measures[i].notes {
             #warning("A♯ is not matching to expected 'A', will have to only feed in the first String and have the accidental be detected by another parameter that controls sharps and flats")
             print("Note tune", i.note.pitch.key.description)
             
@@ -124,11 +127,13 @@ struct CALayerCreator: UIViewRepresentable {
             }
             
             noteModelArray.append(noteModel)
+            numberOfNotes += 1
             currentElement += 1
-            if currentElement == i.note.pitch.description.count {
+            if currentElement == score.musicParts[0].notes.count {
                 print("PitchList count: ", noteModel)
                 return noteModelArray
             }
+        }
         }
         return []
         

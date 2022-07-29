@@ -14,12 +14,12 @@ struct ContentView: View {
                     .offset(y: UIScreen.main.bounds.height / 3)
                     .scaledToFit()
                     .padding(35)
-                    .padding(.trailing, 300)
+                    .padding(.trailing, 1000000)
             }
             .onAppear {
                 TempoResearch().testMeters()
             }
-        }
+        }.frame(maxWidth: .infinity)
     }
 }
 
