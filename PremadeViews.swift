@@ -78,9 +78,6 @@ class PremadeViews {
         
 //        let pitches: [Pitch] = [60, 62, 63, 64, 66, 68, 83]
 //        let spelled = pitches.map { $0.spelledWithDefaultSpelling }
-//        print(externalPitches)
-        
-        #warning("external pitch has 0 values")
         let representable = externalPitches.map {
             StaffRepresentablePitch($0.spelledPitch)
         }
@@ -92,9 +89,10 @@ class PremadeViews {
         let builder = StaffModel.builder
         
 //        var noteStemArray: [NoteheadView] = []
+        #warning("have it take in a matrix that almost controls up and down")
         for (position, point, i) in zip3(positions, points, 0..<points.count) {
             builder.add(point, at: position, noteDuration: externalPitches[i].duration)
-            
+            builder.add(point, at: position + 10, noteDuration: externalPitches[i].duration)
 //            noteStemArray.append(NoteheadView(position: StaffModel, size: .init(staffSlotHeight: 40), noteDuration: externalPitches[i].duration))
             
             print("index:", i, "at", externalPitches[i].duration)
@@ -103,7 +101,6 @@ class PremadeViews {
         let model = builder.build()
         let staff = StaffView(model: model)
         let newBeam = Beam(start: Point(x: 1, y: 1), end: Point(x: 2, y: 2), width: 1)
-//        let newBeam = Beam(start: Point(x: 0, y: 0), end: Point(x: 0, y: -100), width: 5)
         let score = ScoreView(beams: BeamsView(beams: [newBeam], color: .black), staff: staff).rendered.resizedToFitContents
         
         return score
