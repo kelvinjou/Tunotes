@@ -25,30 +25,63 @@ public class NoteheadView: Renderable {
         }
     }
     
+    func getNote(spelling: SpelledPitch) -> Int {
+        var noteSpelling = ["c", "d", "e", "f", "g", "a", "b"]
+        print("LINE 29", spelledNote.spelling.letterName)
+//        var c = 1
+//        var d = 2
+//        var e = 3
+//        var f = 4
+//        var g = 5
+//        var a = 6
+//        var b = 7
+//        spelledNote.spelling.letterName.map(<#T##KeyPath<Self.Output, T>#>)
+        for note in 0..<noteSpelling.count {
+            var letter: String = spelledNote.spelling.letterName.rawValue
+            if letter == noteSpelling[note] {
+                return note
+            }
+        }
+        return 0
+    }
+    
+    
     public var rendered: StyledPath.Composite {
-        print("Inside NoteheadView", noteDuration)
         var pathNote: Path = path
         var noteIsWhite: Double = 0 // 0 = black, 1 = white
-        switch noteDuration {
-        case 0.0:
-            pathNote = wholeNote
+        
+        //        High notes
+        if spelledNote.octave > 4 {
+            pathNote = sixteenthNote(stemAbove: true)
             noteIsWhite = 1
-        case 0.25:
-            pathNote = sixteenthNote
-            noteIsWhite = 0
-        case 0.5:
-            pathNote = eighthNote
-            noteIsWhite = 0
-        case 1.5:
-            pathNote = dottedQuarterNote
-            noteIsWhite = 0
-        case 2.0:
-            pathNote = halfNote
-            noteIsWhite = 1
-        default:
-            pathNote = halfNote
+        }
+        
+        //        Lower notes
+        if getNote(spelling: spelledNote) < 6 || spelledNote.octave <= 4 {
+            pathNote = sixteenthNote(stemAbove: false)
             noteIsWhite = 0
         }
+        
+//        switch noteDuration {
+//        case 0.0:
+//            pathNote = wholeNote
+//            noteIsWhite = 1
+//        case 0.25:
+//            pathNote = sixteenthNote
+//            noteIsWhite = 0
+//        case 0.5:
+//            pathNote = eighthNote
+//            noteIsWhite = 0
+//        case 1.5:
+//            pathNote = dottedQuarterNote
+//            noteIsWhite = 0
+//        case 2.0:
+//            pathNote = halfNote
+//            noteIsWhite = 1
+//        default:
+//            pathNote = halfNote
+//            noteIsWhite = 0
+//        }
         let styling = Styling(fill: Fill(color: Color(white: noteIsWhite, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
         
         
@@ -65,10 +98,10 @@ public class NoteheadView: Renderable {
             .rotated(by: Angle(degrees: 45), around: Point(x: 0.5 * width, y: 0.5 * height))
     }
 
-    private var sixteenthNote: Path {
+    private func sixteenthNote(stemAbove: Bool) -> Path {
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
-
         ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
+        
         ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
         ovalPath.move(to: CGPoint(x: 0, y: 10))
         ovalPath.addLine(to: CGPoint(x: 0, y: 110))
@@ -78,12 +111,15 @@ public class NoteheadView: Renderable {
         // bottom stem
         ovalPath.move(to: CGPoint(x: 0, y: 110))
         ovalPath.addLine(to: CGPoint(x: 20, y: 105))
+        ovalPath.apply(CGAffineTransform(scaleX: stemAbove ? 1 : -1, y: stemAbove ? 1 : -1))
         ovalPath.close()
+        
+        
         return Path
             .init(ovalPath.cgPath)
     }
     
-    private var eighthNote: Path {
+    private func eighthNote(stemAbove: Bool) -> Path {
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
 
         ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
@@ -96,7 +132,7 @@ public class NoteheadView: Renderable {
         return Path
             .init(ovalPath.cgPath)
     }
-    private var dottedQuarterNote: Path {
+    private func dottedQuarterNote(stemAbove: Bool) -> Path {
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
         
         ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
@@ -113,7 +149,7 @@ public class NoteheadView: Renderable {
             .init(combined.cgPath)
     }
     
-    private var halfNote: Path {
+    private func halfNote(stemAbove: Bool) -> Path {
         var ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
 
         ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
@@ -127,7 +163,7 @@ public class NoteheadView: Renderable {
             .init(ovalPath.cgPath)
     }
     
-    private var wholeNote: Path {
+    private func wholeNote(stemAbove: Bool) -> Path {
         var ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
         ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
         ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
@@ -160,11 +196,14 @@ public class NoteheadView: Renderable {
     
     public var noteDuration: Double
     
+    public var spelledNote: SpelledPitch
+    
     // Add configuration
-    public init(position: Point, size: Size, noteDuration: Double) {
+    public init(position: Point, size: Size, noteDuration: Double, spelledNote: SpelledPitch) {
         self.position = position
         self.size = size
         self.noteDuration = noteDuration
+        self.spelledNote = spelledNote
     }
 }
 

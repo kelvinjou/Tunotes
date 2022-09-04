@@ -23,11 +23,13 @@ public struct StaffModel: VerticalPlotModel {
     public let horizontalAxis = DefaultAxis<Double>()
     public let points: [Double: [StaffPointModel]]
     public let noteDuration: [Double]
+    public let spelledNote: [SpelledPitch]
     
     /// Createss a `StaffModel` with the given `clef` and the given `points`.
-    public init(clef: Clef = Clef(.treble), points: [Double: [StaffPointModel]], noteDuration: [Double]) {
+    public init(clef: Clef = Clef(.treble), points: [Double: [StaffPointModel]], noteDuration: [Double], spelledNote: [SpelledPitch]) {
         self.verticalAxis = clef
         self.points = points
         self.noteDuration = noteDuration
+        self.spelledNote = spelledNote
     }
 }

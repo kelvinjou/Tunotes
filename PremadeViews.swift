@@ -16,7 +16,7 @@ import Geometry
 
 class PremadeViews {
     func noteHead() -> StyledPath.Composite {
-        let notehead = NoteheadView(position: .zero, size: NoteheadView.Size(staffSlotHeight: 40, scale: 2), noteDuration: 1)
+        let notehead = NoteheadView(position: .zero, size: NoteheadView.Size(staffSlotHeight: 40, scale: 2), noteDuration: 1, spelledNote: SpelledPitch(spelling: .a, octave: 4))
         return notehead.rendered
     }
     
@@ -55,8 +55,7 @@ class PremadeViews {
         let positions = (0..<pitches.count).map { Double($0) * 100 + 100 }
         let builder = StaffModel.builder
         zip(positions, points).forEach { position, point in
-//            point.stemConnectionPoint(from: .above, axis: Clef(.treble))
-            builder.add(point, at: position, noteDuration: 87)
+//            builder.add(point, at: position, noteDuration: 87)
 
         }
         
@@ -82,7 +81,7 @@ class PremadeViews {
             StaffRepresentablePitch($0.spelledPitch)
         }
 
-
+        print("This is representable", representable)
         let points = representable.map { StaffPointModel([$0]) }
         let positions = (0..<externalPitches.count).map { Double($0) * 100 + 100 }
 
@@ -91,11 +90,12 @@ class PremadeViews {
 //        var noteStemArray: [NoteheadView] = []
         #warning("have it take in a matrix that almost controls up and down")
         for (position, point, i) in zip3(positions, points, 0..<points.count) {
-            builder.add(point, at: position, noteDuration: externalPitches[i].duration)
-            builder.add(point, at: position + 10, noteDuration: externalPitches[i].duration)
+//            print("REP93", representable[i].spelledPitch)
+            builder.add(point, at: position, noteDuration: externalPitches[i].duration, spelledNote: representable[i].spelledPitch)
+//            builder.add(point, at: position + 10, noteDuration: externalPitches[i].duration)
 //            noteStemArray.append(NoteheadView(position: StaffModel, size: .init(staffSlotHeight: 40), noteDuration: externalPitches[i].duration))
             
-            print("index:", i, "at", externalPitches[i].duration)
+//            print("index:", i, "at", externalPitches[i].duration)
         }
         
         let model = builder.build()

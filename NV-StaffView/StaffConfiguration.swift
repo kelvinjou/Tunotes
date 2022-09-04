@@ -27,7 +27,7 @@ public struct StaffConfiguration {
     }
     
     var ledgerLineLength: StaffSlotHeight {
-        return 3 * staffSlotHeight
+        return 3.75 * staffSlotHeight
     }
     
     public init(

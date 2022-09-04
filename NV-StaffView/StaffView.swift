@@ -130,7 +130,8 @@ extension StaffView {
                 startLines(at: position)
                     for point in points {
                         let (above, below) = point.ledgerLines(model.verticalAxis)
-
+//                        print("143", model.spelledNote)
+//                        spelled note is empty
                         addLedgerLines(at: position, above: above, below: below)
                         let pointView = PointView(
                             of: point,
@@ -139,7 +140,9 @@ extension StaffView {
                             staffSlotHeight: configuration.staffSlotHeight,
                             
                             noteDuration: 
-                                model.noteDuration[(Int(position - 100) / 100)]
+                                model.noteDuration[(Int(position - 100) / 100)],
+                            
+                            spelledNote: model.spelledNote[(Int(position - 100) / 100)]
 
                         )
                         print("points", position)
@@ -205,7 +208,7 @@ extension StaffView {
 
 extension StaffView.PointView {
 
-    init(of pointModel: StaffPointModel, at position: Double, clef: Clef, staffSlotHeight: StaffSlotHeight, noteDuration: Double) {
+    init(of pointModel: StaffPointModel, at position: Double, clef: Clef, staffSlotHeight: StaffSlotHeight, noteDuration: Double, spelledNote: SpelledPitch) {
 
         let pitches: [StaffRepresentedPitch] = pointModel.elements.map { element in
 
@@ -217,7 +220,8 @@ extension StaffView.PointView {
                 at: position,
                 altitude: altitude,
                 staffSlotHeight: staffSlotHeight,
-                noteDuration: noteDuration
+                noteDuration: noteDuration,
+                spelledNote: spelledNote
             )
         }
 

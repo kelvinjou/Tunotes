@@ -16,6 +16,7 @@ import Path
 import Pitch
 
 struct CALayerCreator: UIViewRepresentable {
+//    @State var width: CGFloat = 0
     func makeUIView(context: Context) -> some UIView {
         let rect = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 2))
 //          MARK: for singular composite
@@ -23,6 +24,10 @@ struct CALayerCreator: UIViewRepresentable {
 //        let layer3 = CALayer(PremadeViews().noteStem())
 //        let layer2 = CALayer(PremadeViews().noteHead())
         rect.layer.addSublayer(layer2)
+        print(layer2.frame)
+        
+//        var width = layer2.frame.width
+//        self.width = width
 //        rect.layer.addSublayer(layer3)
 
         return rect
@@ -130,7 +135,7 @@ struct CALayerCreator: UIViewRepresentable {
             numberOfNotes += 1
             currentElement += 1
             if currentElement == score.musicParts[0].notes.count {
-                print("PitchList count: ", noteModel)
+                print("PitchList count: ", noteModel.spelledPitch)
                 return noteModelArray
             }
         }
@@ -170,6 +175,7 @@ struct CALayerCreator: UIViewRepresentable {
 struct NoteModel {
     var spelledPitch: SpelledPitch
     var duration: Double
+//    var spelledNote: SpelledPitch
     
     
 }

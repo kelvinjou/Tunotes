@@ -21,13 +21,15 @@ public struct StaffRepresentedPitch {
     public let notehead: NoteheadView?
     public let accidental: AccidentalView?
     public let noteDuration: Double
+    public let spelledNote: SpelledPitch
     
     public init(
         for representablePitch: StaffRepresentablePitch,
         at position: Double,
         altitude: Double,
         staffSlotHeight: StaffSlotHeight,
-        noteDuration: Double
+        noteDuration: Double,
+        spelledNote: SpelledPitch
     )
     {
         self.representableContext = representablePitch
@@ -35,12 +37,14 @@ public struct StaffRepresentedPitch {
         self.altitude = altitude
         self.staffSlotHeight = staffSlotHeight
         self.noteDuration = noteDuration
+        self.spelledNote = spelledNote
         
         #warning("THIS IS USED BY StaffRepresentablePitch")
         self.notehead = NoteheadView(
             position: Point(x: position, y: altitude),
             size: NoteheadView.Size(staffSlotHeight: staffSlotHeight, scale: 1),
-            noteDuration: noteDuration
+            noteDuration: noteDuration,
+            spelledNote: spelledNote
         )
 
         self.accidental = AccidentalView.makeAccidental(representableContext.accidental,
