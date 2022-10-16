@@ -37,7 +37,6 @@ extension SpelledPitch {
     /// Creates a `SpelledPitch` with a given `spelling` in displaced by the given `octave`.
     public init(_ spelling: Pitch.Spelling, _ accidental: Pitch.Spelling.Modifier, _ octave: Int = 4) {
         self.spelling = spelling
-//        self.accidental = accidental
         self.octave = octave
     }
 }

@@ -8,24 +8,30 @@ import MusicSymbol
 struct ContentView: View {
     var body: some View {
         IntroView()
+//            .onAppear {
+//                ChooseMidiTrack().listOutAllNoteTracks()
+//            }
     }
 }
 
 struct IntroView: View {
     @State var letsgo: Bool = false
+    @State var startDisplaying = false
     @State var pageIndex = 0
     @State var numberOfPages = 5
+    @State var selectedTrack = 0
     var body: some View {
-        if letsgo {
+        if startDisplaying {
             ScrollView(.horizontal) {
                 HStack {
-                    CALayerCreator()
+                    let _ = print("selected track: ", selectedTrack)
+                    CALayerCreator(selectedTrack: selectedTrack)
                         .padding(.trailing, 185710.0)
-//                    Spacer()
+                    Spacer()
                 }
             }
-//            PremadeViews()
-//            NoteSequenceAsList()
+////            PremadeViews()
+////            NoteSequenceAsList()
         } else {
             TabView(selection: $pageIndex) {
                 ForEach(0..<numberOfPages, id: \.self) { page in
@@ -33,11 +39,37 @@ struct IntroView: View {
                     case 0:
                         Intro_Page1(letsgo: $letsgo, pageIndex: $pageIndex)
                     case 1:
-                        Text("page 1")
+                        VStack {
+                            Text("Choose your track")
+                            let _ = print("THIS", ChooseMidiTrack().listOutAllNoteTracks())
+                            ForEach(0..<ChooseMidiTrack().listOutAllNoteTracks()!.count, id: \.self) { i in
+                                Button(action: {
+                                    selectedTrack = i
+                                }) {
+                                    Text("Track \(i + 1)")
+                                }
+                            }
+                            
+                            Button(action: {
+                                //                            selectedTrack
+                                startDisplaying.toggle()
+                            }) {
+                                Capsule()
+                                    .frame(width: 140, height: 35)
+                                    .overlay(
+                                        Text("Start displaying")
+                                            .foregroundColor(.white)
+                                    )
+                                    .foregroundColor(.mint)
+
+                            }
+                        }
+                    case 2:
+                        Text("")
                     default:
                         Text("Page whatever")
                     }
-                        
+
                 }
             }.tabViewStyle(.page(indexDisplayMode: .never))
                 .onChange(of: pageIndex) { value in
@@ -47,7 +79,6 @@ struct IntroView: View {
                 .frame(maxWidth: 0, maxHeight: 0)
                 .padding(.bottom, 40)
         }
-        
         
     }
 }
@@ -77,8 +108,8 @@ struct Intro_Page1: View {
         VStack {
             Text("Welcome to Tunotes!")
             Button(action: {
-                letsgo.toggle()
-//                pageIndex += 1
+//                letsgo.toggle()
+                pageIndex += 1
             }) {
                 Capsule()
                     .frame(width: 100, height: 35)

@@ -25,63 +25,56 @@ public class NoteheadView: Renderable {
         }
     }
     
-    func getNote(spelling: SpelledPitch) -> Int {
-        var noteSpelling = ["c", "d", "e", "f", "g", "a", "b"]
-        print("LINE 29", spelledNote.spelling.letterName)
-//        var c = 1
-//        var d = 2
-//        var e = 3
-//        var f = 4
-//        var g = 5
-//        var a = 6
-//        var b = 7
-//        spelledNote.spelling.letterName.map(<#T##KeyPath<Self.Output, T>#>)
-        for note in 0..<noteSpelling.count {
-            var letter: String = spelledNote.spelling.letterName.rawValue
-            if letter == noteSpelling[note] {
-                return note
-            }
-        }
-        return 0
-    }
+//    func getNote(spelling: SpelledPitch) -> Int {
+//        var noteSpelling = ["c", "d", "e", "f", "g", "a", "b"]
+//        for note in 0..<noteSpelling.count {
+//            var letter: String = spelledNote.spelling.letterName.rawValue
+//            if letter == noteSpelling[note] {
+//                return note
+//            }
+//        }
+//        return 0
+//    }
     
     
     public var rendered: StyledPath.Composite {
         var pathNote: Path = path
         var noteIsWhite: Double = 0 // 0 = black, 1 = white
         
-        //        High notes
-        if spelledNote.octave > 4 {
-            pathNote = sixteenthNote(stemAbove: true)
+        var stemGoesUp: Bool = true
+        if spelledNote.octave <= 4 {
+            stemGoesUp = true
+        }
+
+        else if spelledNote.octave > 4 {
+            stemGoesUp = false
+        }
+
+        
+        // stem up when note is greater than B in the fourth octave
+        // down down when note is equal or less than B in the fourth octave
+        switch noteDuration {
+//            put these note static values in some kind of tuple, it would be easier to access and it'll be less messy
+        case 0.0:
+            pathNote = wholeNote(stemAbove: stemGoesUp)
+            noteIsWhite = 0
+        case 0.25:
+            pathNote = sixteenthNote(stemAbove: stemGoesUp)
+            noteIsWhite = 0
+        case 0.5:
+            pathNote = eighthNote(stemAbove: stemGoesUp)
+            noteIsWhite = 0
+        case 1.5:
+            pathNote = dottedQuarterNote(stemAbove: stemGoesUp)
+            noteIsWhite = 0
+        case 2.0:
+            pathNote = halfNote(stemAbove: stemGoesUp)
+            noteIsWhite = 0
+        default:
+            pathNote = wholeNote(stemAbove: stemGoesUp)
             noteIsWhite = 1
         }
-        
-        //        Lower notes
-        if getNote(spelling: spelledNote) < 6 || spelledNote.octave <= 4 {
-            pathNote = sixteenthNote(stemAbove: false)
-            noteIsWhite = 0
-        }
-        
-//        switch noteDuration {
-//        case 0.0:
-//            pathNote = wholeNote
-//            noteIsWhite = 1
-//        case 0.25:
-//            pathNote = sixteenthNote
-//            noteIsWhite = 0
-//        case 0.5:
-//            pathNote = eighthNote
-//            noteIsWhite = 0
-//        case 1.5:
-//            pathNote = dottedQuarterNote
-//            noteIsWhite = 0
-//        case 2.0:
-//            pathNote = halfNote
-//            noteIsWhite = 1
-//        default:
-//            pathNote = halfNote
-//            noteIsWhite = 0
-//        }
+
         let styling = Styling(fill: Fill(color: Color(white: noteIsWhite, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
         
         
@@ -99,22 +92,24 @@ public class NoteheadView: Renderable {
     }
 
     private func sixteenthNote(stemAbove: Bool) -> Path {
-        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
-        ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
+
         
+        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+
+        ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
         ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
+        
         ovalPath.move(to: CGPoint(x: 0, y: 10))
         ovalPath.addLine(to: CGPoint(x: 0, y: 110))
-        // sixteenth note stem
+        
         ovalPath.move(to: CGPoint(x: 0, y: 100))
         ovalPath.addLine(to: CGPoint(x: 20, y: 95))
-        // bottom stem
+
         ovalPath.move(to: CGPoint(x: 0, y: 110))
         ovalPath.addLine(to: CGPoint(x: 20, y: 105))
-        ovalPath.apply(CGAffineTransform(scaleX: stemAbove ? 1 : -1, y: stemAbove ? 1 : -1))
+        ovalPath.apply(CGAffineTransform(rotationAngle: stemAbove ? CGFloat.pi : 0))
+        ovalPath.apply(CGAffineTransform(translationX: stemAbove ? 30 : 0, y: stemAbove ? 20 : 0))
         ovalPath.close()
-        
-        
         return Path
             .init(ovalPath.cgPath)
     }
@@ -128,6 +123,8 @@ public class NoteheadView: Renderable {
         ovalPath.addLine(to: CGPoint(x: 0, y: 110))
         ovalPath.move(to: CGPoint(x: 0, y: 110))
         ovalPath.addLine(to: CGPoint(x: 20, y: 105))
+        ovalPath.apply(CGAffineTransform(rotationAngle: stemAbove ? CGFloat.pi : 0))
+        ovalPath.apply(CGAffineTransform(translationX: stemAbove ? 30 : 0, y: stemAbove ? 20 : 0))
         ovalPath.close()
         return Path
             .init(ovalPath.cgPath)
@@ -139,12 +136,15 @@ public class NoteheadView: Renderable {
         ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
         ovalPath.move(to: CGPoint(x: 0, y: 10))
         ovalPath.addLine(to: CGPoint(x: 0, y: 110))
+        ovalPath.apply(CGAffineTransform(rotationAngle: stemAbove ? CGFloat.pi : 0))
+        ovalPath.apply(CGAffineTransform(translationX: stemAbove ? 30 : 0, y: stemAbove ? 20 : 0))
         ovalPath.close()
         let dotPath = UIBezierPath(ovalIn: CGRect(x: 40, y: 0, width: 5, height: 5))
         
         let combined = UIBezierPath()
         combined.append(ovalPath)
         combined.append(dotPath)
+        
         return Path
             .init(combined.cgPath)
     }
@@ -205,12 +205,14 @@ public class NoteheadView: Renderable {
         self.noteDuration = noteDuration
         self.spelledNote = spelledNote
     }
+    
+    enum NoteDuration {
+        case sixteenth
+        case eighth
+        case quarter
+        case half
+        case whole
+    }
 }
 
-enum NoteDuration: Double {
-    case sixteenth
-    case eighth
-    case quarter
-    case half
-    case whole
-}
+

@@ -58,7 +58,7 @@ extension StaffModel {
                 }
             }
             
-            print("This array", noteDurationArray)
+//            print("This array", noteDurationArray)
             return StaffModel(clef: clef, points: points, noteDuration: noteDurationArray, spelledNote: spelledNoteArray)
         }
     }

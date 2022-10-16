@@ -17,14 +17,15 @@ import Pitch
 
 struct CALayerCreator: UIViewRepresentable {
 //    @State var width: CGFloat = 0
+    var selectedTrack: Int
     func makeUIView(context: Context) -> some UIView {
         let rect = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 2))
 //          MARK: for singular composite
-        let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes()))
+        let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack)))
 //        let layer3 = CALayer(PremadeViews().noteStem())
 //        let layer2 = CALayer(PremadeViews().noteHead())
         rect.layer.addSublayer(layer2)
-        print(layer2.frame)
+//        print(layer2.frame)
         
 //        var width = layer2.frame.width
 //        self.width = width
@@ -42,7 +43,8 @@ struct CALayerCreator: UIViewRepresentable {
     }
     func updateUIView(_ uiView: UIViewType, context: Context) {}
     
-    func testAccessMeasureAndNotes() -> [NoteModel] {
+    func testAccessMeasureAndNotes(selectedTrack: Int) -> [NoteModel] {
+        
         let score = MusicScore(url: ScoreSamples.url_spring1st)!
         
         
@@ -51,12 +53,12 @@ struct CALayerCreator: UIViewRepresentable {
         var noteModelArray: [NoteModel] = []
         var numberOfNotes: Int = 0
         var currentElement = 0
-        for i in 0..<score.musicParts[0].measures.count {
-            print("measure \(i)")
-        print("\t Should have", score.musicParts[0].measures[i].notes.count, "Notes")
-        for i in score.musicParts[0].measures[i].notes {
+        for i in 0..<score.musicParts[selectedTrack].measures.count {
+//            print("measure \(i)")
+//        print("\t Should have", score.musicParts[0].measures[i].notes.count, "Notes")
+        for i in score.musicParts[selectedTrack].measures[i].notes {
             #warning("A♯ is not matching to expected 'A', will have to only feed in the first String and have the accidental be detected by another parameter that controls sharps and flats")
-            print("Note tune", i.note.pitch.key.description)
+//            print("Note tune", i.note.pitch.key.description)
             
             let fullDesc = i.note.pitch.key.description
             let notePitch = fullDesc[0]
@@ -111,7 +113,7 @@ struct CALayerCreator: UIViewRepresentable {
                         octave: i.note.pitch.octave
                     ),
                     duration: i.duration)
-                print(noteModel)
+//                print(noteModel)
             }
 
             else if notePitch == Keys.a.rawValue {
@@ -135,7 +137,7 @@ struct CALayerCreator: UIViewRepresentable {
             numberOfNotes += 1
             currentElement += 1
             if currentElement == score.musicParts[0].notes.count {
-                print("PitchList count: ", noteModel.spelledPitch)
+//                print("PitchList count: ", noteModel.spelledPitch)
                 return noteModelArray
             }
         }

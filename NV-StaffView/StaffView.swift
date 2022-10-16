@@ -145,7 +145,8 @@ extension StaffView {
                             spelledNote: model.spelledNote[(Int(position - 100) / 100)]
 
                         )
-                        print("points", position)
+                        #warning("here")
+//                        print("points", position)
 
                         self.points.append(pointView)
                     }

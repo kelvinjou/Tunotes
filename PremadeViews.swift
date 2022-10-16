@@ -81,7 +81,7 @@ class PremadeViews {
             StaffRepresentablePitch($0.spelledPitch)
         }
 
-        print("This is representable", representable)
+//        print("This is representable", representable)
         let points = representable.map { StaffPointModel([$0]) }
         let positions = (0..<externalPitches.count).map { Double($0) * 100 + 100 }
 
