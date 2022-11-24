@@ -16,23 +16,42 @@ import Path
 import Pitch
 
 struct CALayerCreator: UIViewRepresentable {
-//    @State var width: CGFloat = 0
+    
+    let textData: String = "Just to add onto the already great answers, you might want to add multiple labels in your project so doing all of this (setting size, style etc) will be a pain. To solve this, you can create a separate UILabel class."
     var selectedTrack: Int
+    
     func makeUIView(context: Context) -> some UIView {
+        let scrollView: UIScrollView = {
+               let view = UIScrollView()
+               view.translatesAutoresizingMaskIntoConstraints = false
+               return view
+           }()
         let rect = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 2))
+        
+        rect.addSubview(scrollView)
+                
+                // constrain the scroll view to 8-pts on each side
+                scrollView.leftAnchor.constraint(equalTo: rect.leftAnchor, constant: 8.0).isActive = true
+                scrollView.topAnchor.constraint(equalTo: rect.topAnchor, constant: 8.0).isActive = true
+                scrollView.rightAnchor.constraint(equalTo: rect.rightAnchor, constant: -8.0).isActive = true
+                scrollView.bottomAnchor.constraint(equalTo: rect.bottomAnchor, constant: -8.0).isActive = true
+    
 //          MARK: for singular composite
         let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack)))
-//        let layer3 = CALayer(PremadeViews().noteStem())
-//        let layer2 = CALayer(PremadeViews().noteHead())
-        rect.layer.addSublayer(layer2)
-//        print(layer2.frame)
+//
+//        spacing = layer2.frame.width
+////
+//        let anim = CABasicAnimation(keyPath: "bounds")
+//        anim.duration = 5
+//        anim.fromValue = NSValue(cgRect: CGRect(x: 0, y: 0, width: 0, height: 30))
+//        anim.toValue = NSValue(cgRect: CGRect(x: 0, y: 0, width: 3000, height: 30))
+//        layer2.add(anim, forKey: "anim")
         
-//        var width = layer2.frame.width
-//        self.width = width
-//        rect.layer.addSublayer(layer3)
 
+        rect.layer.addSublayer(layer2)
+//        rect.addSubview(UIImageView(image: imageFromLayer(layer: layer2)))
         return rect
-        
+// put CALayer inside a view, put the view inside a UIScrollview and return the UIscrollview
 //         MARK: for multiple composites
 //        for i in PremadeViews().staffLinesAndClef() {
 //            let layer = CALayer(i)
@@ -40,6 +59,14 @@ struct CALayerCreator: UIViewRepresentable {
 //        }
 //                return rect
         
+    
+    }
+    func imageFromLayer(layer:CALayer) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(layer.frame.size, layer.isOpaque, 0)
+        layer.render(in: UIGraphicsGetCurrentContext()!)
+        let outputImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return outputImage!
     }
     func updateUIView(_ uiView: UIViewType, context: Context) {}
     

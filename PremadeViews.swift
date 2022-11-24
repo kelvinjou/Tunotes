@@ -103,6 +103,7 @@ class PremadeViews {
         let newBeam = Beam(start: Point(x: 1, y: 1), end: Point(x: 2, y: 2), width: 1)
         let score = ScoreView(beams: BeamsView(beams: [newBeam], color: .black), staff: staff).rendered.resizedToFitContents
         
+        
         return score
     
     }
