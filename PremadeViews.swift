@@ -88,7 +88,7 @@ class PremadeViews {
         let builder = StaffModel.builder
         
 //        var noteStemArray: [NoteheadView] = []
-        #warning("have it take in a matrix that almost controls up and down")
+        #warning("somehow add bar measures here")
         for (position, point, i) in zip3(positions, points, 0..<points.count) {
 //            print("REP93", representable[i].spelledPitch)
             builder.add(point, at: position, noteDuration: externalPitches[i].duration, spelledNote: representable[i].spelledPitch)

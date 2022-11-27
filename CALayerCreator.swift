@@ -16,8 +16,6 @@ import Path
 import Pitch
 
 struct CALayerCreator: UIViewRepresentable {
-    
-    let textData: String = "Just to add onto the already great answers, you might want to add multiple labels in your project so doing all of this (setting size, style etc) will be a pain. To solve this, you can create a separate UILabel class."
     var selectedTrack: Int
     
     func makeUIView(context: Context) -> some UIView {
@@ -37,27 +35,12 @@ struct CALayerCreator: UIViewRepresentable {
                 scrollView.bottomAnchor.constraint(equalTo: rect.bottomAnchor, constant: -8.0).isActive = true
     
 //          MARK: for singular composite
-        let layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack)))
-//
-//        spacing = layer2.frame.width
-////
-//        let anim = CABasicAnimation(keyPath: "bounds")
-//        anim.duration = 5
-//        anim.fromValue = NSValue(cgRect: CGRect(x: 0, y: 0, width: 0, height: 30))
-//        anim.toValue = NSValue(cgRect: CGRect(x: 0, y: 0, width: 3000, height: 30))
-//        layer2.add(anim, forKey: "anim")
-        
+        lazy var layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack)))
+
 
         rect.layer.addSublayer(layer2)
-//        rect.addSubview(UIImageView(image: imageFromLayer(layer: layer2)))
         return rect
-// put CALayer inside a view, put the view inside a UIScrollview and return the UIscrollview
-//         MARK: for multiple composites
-//        for i in PremadeViews().staffLinesAndClef() {
-//            let layer = CALayer(i)
-//            rect.layer.addSublayer(layer)
-//        }
-//                return rect
+
         
     
     }
@@ -74,100 +57,44 @@ struct CALayerCreator: UIViewRepresentable {
         
         let score = MusicScore(url: ScoreSamples.url_spring1st)!
         
-        
-
-//        var musicDuration: [NoteInScore] = []
         var noteModelArray: [NoteModel] = []
         var numberOfNotes: Int = 0
         var currentElement = 0
-        for i in 0..<score.musicParts[selectedTrack].measures.count {
-//            print("measure \(i)")
-//        print("\t Should have", score.musicParts[0].measures[i].notes.count, "Notes")
-        for i in score.musicParts[selectedTrack].measures[i].notes {
-            #warning("A♯ is not matching to expected 'A', will have to only feed in the first String and have the accidental be detected by another parameter that controls sharps and flats")
-//            print("Note tune", i.note.pitch.key.description)
-            
-            let fullDesc = i.note.pitch.key.description
-            let notePitch = fullDesc[0]
-            let rawAccidental = fullDesc[1]
-            
-            var accidental: Pitch.Spelling.Modifier = .natural
-            rawAccidental.map { value in
-                if value == "♯" {
-                    accidental = .sharp
+        for j in 0..<score.musicParts[selectedTrack].measures.count {
+            for i in score.musicParts[selectedTrack].measures[j].notes {
+                
+                let fullDesc = i.note.pitch.key.description
+                let notePitch = fullDesc[0]
+                let rawAccidental = fullDesc[1]
+                
+                var accidental: Pitch.Spelling.Modifier = .natural
+                rawAccidental.map { value in
+                    if value == "♯" {
+                        accidental = .sharp
+                    }
+                }
+                
+                var noteModel = NoteModel(spelledPitch: SpelledPitch(.b, .natural), duration: 0)
+                Keys.allCases.forEach {
+                    if notePitch == $0.rawValue {
+                        noteModel = NoteModel(
+                            spelledPitch: SpelledPitch(
+                                spelling: Keys(rawValue: notePitch)!.keyMapping,
+                                octave: i.note.pitch.octave),
+                            duration: i.duration,
+                            measureNum: j
+                        )
+                    }
+                }
+                
+                noteModelArray.append(noteModel)
+                numberOfNotes += 1
+                currentElement += 1
+                if currentElement == score.musicParts[0].notes.count {
+                    return noteModelArray
                 }
             }
-            
-            var noteModel = NoteModel(spelledPitch: SpelledPitch(.b, .natural), duration: 0)
-
-            if notePitch == Keys.c.rawValue {
-                noteModel = NoteModel(
-                    spelledPitch: SpelledPitch(
-                        spelling: .c,
-                        octave: i.note.pitch.octave
-                    ),
-                    duration: i.duration)
-
-            }
-            else if notePitch == Keys.d.rawValue {
-                noteModel = NoteModel(
-                    spelledPitch: SpelledPitch(
-                        spelling: Pitch.Spelling(.d, accidental),
-                        octave: i.note.pitch.octave
-                    ),
-                    duration: i.duration)
-            }
-            else if notePitch == Keys.e.rawValue {
-                noteModel = NoteModel(
-                    spelledPitch: SpelledPitch(
-                        spelling: Pitch.Spelling(.e, accidental),
-                        octave: i.note.pitch.octave
-                    ),
-                    duration: i.duration)
-            }
-            else if notePitch == Keys.f.rawValue {
-                noteModel = NoteModel(
-                    spelledPitch: SpelledPitch(
-                        spelling: Pitch.Spelling(.f, accidental),
-                        octave: i.note.pitch.octave
-                    ),
-                    duration: i.duration)
-            }
-            else if notePitch == Keys.g.rawValue {
-                noteModel = NoteModel(
-                    spelledPitch: SpelledPitch(
-                        spelling: Pitch.Spelling(.g, accidental),
-                        octave: i.note.pitch.octave
-                    ),
-                    duration: i.duration)
-//                print(noteModel)
-            }
-
-            else if notePitch == Keys.a.rawValue {
-                noteModel = NoteModel(
-                    spelledPitch: SpelledPitch(
-                        spelling: Pitch.Spelling(.a, accidental),
-                        octave: i.note.pitch.octave
-                    ),
-                    duration: i.duration)
-            }
-            else if notePitch == Keys.b.rawValue {
-                noteModel = NoteModel(
-                    spelledPitch: SpelledPitch(
-                        spelling: Pitch.Spelling(.b, accidental),
-                        octave: i.note.pitch.octave
-                    ),
-                    duration: i.duration)
-            }
-            
-            noteModelArray.append(noteModel)
-            numberOfNotes += 1
-            currentElement += 1
-            if currentElement == score.musicParts[0].notes.count {
-//                print("PitchList count: ", noteModel.spelledPitch)
-                return noteModelArray
-            }
-        }
+            print("this is measure", j , "which is after ")
         }
         return []
         
@@ -204,8 +131,7 @@ struct CALayerCreator: UIViewRepresentable {
 struct NoteModel {
     var spelledPitch: SpelledPitch
     var duration: Double
-//    var spelledNote: SpelledPitch
-    
+    var measureNum: Int?
     
 }
 
@@ -217,6 +143,18 @@ enum Keys: String, CaseIterable {
     case g = "G"
     case a = "A"
     case b = "B"
+    
+    var keyMapping: Pitch.Spelling {
+        switch self {
+        case .c: return Pitch.Spelling.c
+        case .d: return Pitch.Spelling.d
+        case .e: return Pitch.Spelling.e
+        case .f: return Pitch.Spelling.f
+        case .g: return Pitch.Spelling.g
+        case .a: return Pitch.Spelling.a
+        case .b: return Pitch.Spelling.b
+        }
+    }
 }
 
 
