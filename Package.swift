@@ -35,17 +35,26 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(url: "https://github.com/musical77/MusicScore", .branch("main")),
         .package(url: "https://github.com/kelvinjou/NotationViewDependentPackage", .branch("main")),
-        .package(url: "https://github.com/KelvinMihir/NotationView", .branch("main"))
+        .package(url: "https://github.com/dn-m/Graphics", .branch("latest"))
     ],
     targets: [
         .executableTarget(
             name: "AppModule",
             dependencies: [
-                .product(name: "PlotView", package: "notationview"),
-                .product(name: "RhythmView", package: "notationview"),
-                .product(name: "ScoreView", package: "notationview"),
-                .product(name: "StaffView", package: "notationview")
+                .product(name: "Articulations", package: "notationviewdependentpackage"),
+                .product(name: "Duration", package: "notationviewdependentpackage"),
+                .product(name: "Dynamics", package: "notationviewdependentpackage"),
+                .product(name: "MusicModel", package: "notationviewdependentpackage"),
+                .product(name: "Pitch", package: "notationviewdependentpackage"),
+                .product(name: "MusicScore", package: "musicscore"),
+                .product(name: "Geometry", package: "graphics"),
+                .product(name: "GraphicsTesting", package: "graphics"),
+                .product(name: "Path", package: "graphics"),
+                .product(name: "QuartzAdapter", package: "graphics"),
+                .product(name: "Rendering", package: "graphics"),
+                .product(name: "SVG", package: "graphics")
             ],
             path: ".",
             resources: [
