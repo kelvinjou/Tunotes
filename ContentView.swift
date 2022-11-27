@@ -11,7 +11,7 @@ struct ContentView: View {
         let gradient1 = Gradient(colors: [.purple, .yellow])
         let gradient2 = Gradient(colors: [.blue, .purple])
     var body: some View {
-        ZStack {
+        ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
             Rectangle()
                         .animatableGradient(fromGradient: gradient1, toGradient: gradient2, progress: progress)
                         .ignoresSafeArea()
@@ -21,7 +21,7 @@ struct ContentView: View {
                                 self.progress = 1.0
                             }
                         }
-        Text("Device is in '\(orientationInfo.orientation == .portrait ? "portrait" : "landscape")' ")
+            Text("Device is in '\(orientationInfo.orientation == .portrait ? "portrait" : "landscape")' ")
             IntroView(progress: $progress)
         }
     }
@@ -29,7 +29,7 @@ struct ContentView: View {
 
 struct IntroView: View {
     @EnvironmentObject var orientationInfo: OrientationInfo
-    @ObservedObject var forDict = ForDict()
+
     @State var letsgo: Bool = false
     @State var startDisplaying = false
     @State var pageIndex = 0
@@ -59,50 +59,7 @@ struct IntroView: View {
                     case 0:
                         Intro_Page1(letsgo: $letsgo, pageIndex: $pageIndex)
                     case 1:
-                        ZStack {
-                            Rectangle()
-                                        .animatableGradient(fromGradient: gradient1, toGradient: gradient2, progress: progress)
-                                        .ignoresSafeArea()
-                                        .opacity(0.6)
-                                        
-                        VStack {
-                            Text("Choose your track")
-                            
-                            
-                            ForEach(0..<ChooseMidiTrack().listOutAllNoteTracks()!.count - 1, id: \.self) { i in
-//                                var onlyKeys = Array(ChooseMidiTrack().listOutAllNoteTracks().keys)[i]
-//                                let keys: [String] = Array(ChooseMidiTrack().listOutAllNoteTracks()![i].keys)
-                                let _ = print("i", i)
-                                let _ = print("KEY", forDict.key.count)
-                            
-                                Button(action: {
-                                    selectedTrack = i
-                                }) {
-//                                    Text("Track \(i + 1)")
-                                    Text("\(forDict.key[i])")
-                                }
-                            }
-                            
-                            Button(action: {
-                                if orientationInfo.orientation == .portrait {
-                                    print("turn phone into landscape")
-                                }
-                                else {
-                                    startDisplaying.toggle()
-                                }
-                                
-                            }) {
-                                Capsule()
-                                    .frame(width: 140, height: 35)
-                                    .overlay(
-                                        Text("Start displaying")
-                                            .foregroundColor(.white)
-                                    )
-                                    .foregroundColor(selectedTrack == -1 ? .gray : .mint)
-
-                            }.disabled(selectedTrack == -1 ? true : false)
-                        }
-                        }
+                        ChooseTrackView(pageIndex: $pageIndex, selectedTrack: $selectedTrack, startDisplaying: $startDisplaying)
                     case 2:
                         Text("")
                     default:
@@ -186,6 +143,80 @@ struct Intro_Page1: View {
             }
         }
         
+    }
+}
+
+struct ChooseTrackView: View {
+    @EnvironmentObject var orientationInfo: OrientationInfo
+    @ObservedObject var forDict = ForDict()
+    @Binding var pageIndex: Int
+    @Binding var selectedTrack: Int
+    @Binding var startDisplaying: Bool
+    
+    @State var portraitAlertMessage: Bool = false
+    @State private var progress: CGFloat = 0
+        let gradient1 = Gradient(colors: [.purple, .yellow])
+        let gradient2 = Gradient(colors: [.blue, .purple])
+    var body: some View {
+        ZStack {
+            Rectangle()
+                        .animatableGradient(fromGradient: gradient1, toGradient: gradient2, progress: progress)
+                        .ignoresSafeArea()
+                        .opacity(0.6)
+                        
+        VStack {
+            Text("Choose Your Track")
+                .bold()
+                .font(.headline)
+                .padding(10)
+            
+            
+            ForEach(0..<ChooseMidiTrack().listOutAllNoteTracks()!.count - 1, id: \.self) { i in
+//                                var onlyKeys = Array(ChooseMidiTrack().listOutAllNoteTracks().keys)[i]
+//                                let keys: [String] = Array(ChooseMidiTrack().listOutAllNoteTracks()![i].keys)
+                let _ = print("i", i)
+                let _ = print("KEY", forDict.key.count)
+            
+                Button(action: {
+                    selectedTrack = i
+                }) {
+//                                    Text("Track \(i + 1)")
+                    Text("\(forDict.key[i])")
+                }
+            }
+            
+            Button(action: {
+                self.portraitAlertMessage = true
+                if orientationInfo.orientation == .portrait {
+                    print("turn phone into landscape")
+                }
+                else {
+                    startDisplaying.toggle()
+                }
+                
+            }) {
+                Capsule()
+                    .frame(width: 140, height: 35)
+                    .overlay(
+                        Text("Start displaying")
+                            .foregroundColor(.white)
+                    )
+                    .foregroundColor(selectedTrack == -1 ? .gray : .mint)
+
+            }.disabled(selectedTrack == -1 ? true : false)
+            
+            if orientationInfo.orientation == .portrait && self.portraitAlertMessage == true {
+                Label {
+                    Text("Turn Phone Into Landscape")
+                } icon: {
+                    Image(systemName: "iphone.landscape")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 35, height: 35)
+                }
+            }
+        }
+        }
     }
 }
 

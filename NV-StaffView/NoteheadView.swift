@@ -75,8 +75,7 @@ public class NoteheadView: Renderable {
             noteIsWhite = 1
         }
 
-        let styling = Styling(fill: Fill(color: Color(white: noteIsWhite, alpha: 1), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
-        
+        let styling = Styling(fill: Fill(color: Color(white: noteIsWhite, alpha: 0.8), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
         
         
         let styledPath = StyledPath(frame: frame, path: pathNote, styling: styling)
