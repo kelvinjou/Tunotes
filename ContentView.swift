@@ -41,17 +41,12 @@ struct IntroView: View {
     let gradient2 = Gradient(colors: [.blue, .purple])
     var body: some View {
         if startDisplaying {
-            let minWidth: Double = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack).testAccessMeasureAndNotes(selectedTrack: selectedTrack))).bounds.width
             GeometryReader { g in
-                ScrollView(.horizontal) {
-                    HStack {
-                        let _ = print("selected track: ", selectedTrack)
-                        CALayerCreator(selectedTrack: selectedTrack)
-                            .padding(.trailing, minWidth)
-                    }
+                HStack {
+                    let _ = print("selected track: ", selectedTrack)
+                    CALayerCreatorWrapper(selectedTrack: $selectedTrack, startDisplaying: $startDisplaying)
                 }
             }
-            
         } else {
             TabView(selection: $pageIndex) {
                 ForEach(0..<numberOfPages, id: \.self) { page in

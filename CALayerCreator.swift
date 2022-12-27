@@ -15,6 +15,39 @@ import UIKit
 import Path
 import Pitch
 
+
+struct CALayerCreatorWrapper: View {
+    @Binding var selectedTrack: Int
+    @Binding var startDisplaying: Bool
+    var body: some View {
+        let minWidth: Double = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack).testAccessMeasureAndNotes(selectedTrack: selectedTrack))).bounds.width
+        ZStack(alignment: Alignment.bottomLeading) {
+            ScrollView(.horizontal) {
+            CALayerCreator(selectedTrack: selectedTrack)
+                    .padding(.trailing, minWidth)
+
+            }
+            Button(action: {
+                print("pressed")
+                startDisplaying = false
+            }) {
+                Circle()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(.white)
+                    .overlay(
+                        Image(systemName: "chevron.left")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 35, height: 35)
+                            
+                    )
+                    .padding()
+            }
+        }
+        
+    }
+}
+
 struct CALayerCreator: UIViewRepresentable {
     var selectedTrack: Int
     
