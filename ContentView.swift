@@ -7,6 +7,7 @@ import MusicSymbol
 
 struct ContentView: View {
     @EnvironmentObject var orientationInfo: OrientationInfo
+    
     @State private var progress: CGFloat = 0
         let gradient1 = Gradient(colors: [.purple, .yellow])
         let gradient2 = Gradient(colors: [.blue, .purple])
@@ -20,6 +21,7 @@ struct ContentView: View {
                             withAnimation(.linear(duration: 5.0).repeatForever(autoreverses: true)) {
                                 self.progress = 1.0
                             }
+                            
                         }
             Text("Device is in '\(orientationInfo.orientation == .portrait ? "portrait" : "landscape")' ")
             IntroView(progress: $progress)
@@ -27,9 +29,14 @@ struct ContentView: View {
     }
 }
 
+class StateManagement: ObservableObject {
+    @Published var paddingWidth: Double = 0
+}
+
 struct IntroView: View {
     @EnvironmentObject var orientationInfo: OrientationInfo
-
+    @StateObject var stateManagement = StateManagement()
+    
     @State var letsgo: Bool = false
     @State var startDisplaying = false
     @State var pageIndex = 0
@@ -46,6 +53,10 @@ struct IntroView: View {
                     let _ = print("selected track: ", selectedTrack)
                     CALayerCreatorWrapper(selectedTrack: $selectedTrack, startDisplaying: $startDisplaying)
                 }
+            }
+            .onAppear {
+                stateManagement.paddingWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack).testAccessMeasureAndNotes(selectedTrack: selectedTrack))).bounds.width
+
             }
         } else {
             TabView(selection: $pageIndex) {

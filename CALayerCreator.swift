@@ -19,31 +19,89 @@ import Pitch
 struct CALayerCreatorWrapper: View {
     @Binding var selectedTrack: Int
     @Binding var startDisplaying: Bool
+    
+    @State private var offset: CGFloat = 0
+    @State var minWidth = 0.0
+    
+    @State var startScrolling = false
+    
+    @State private var sliderValue: Double = 0.5
+    
     var body: some View {
-        let minWidth: Double = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack).testAccessMeasureAndNotes(selectedTrack: selectedTrack))).bounds.width
-        ZStack(alignment: Alignment.bottomLeading) {
+        
+        ZStack(alignment: Alignment.bottom) {
+            //            ZStack(alignment: Alignment.bottomLeading) {
             ScrollView(.horizontal) {
-            CALayerCreator(selectedTrack: selectedTrack)
+                CALayerCreator(selectedTrack: selectedTrack)
+                
                     .padding(.trailing, minWidth)
-
+                    .offset(x: self.offset, y: 0)
+                    .onAppear {
+                        minWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack).testAccessMeasureAndNotes(selectedTrack: selectedTrack))).bounds.width                        }
             }
-            Button(action: {
-                print("pressed")
-                startDisplaying = false
-            }) {
-                Circle()
-                    .frame(width: 50, height: 50)
-                    .foregroundColor(.white)
-                    .overlay(
-                        Image(systemName: "chevron.left")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 35, height: 35)
+            HStack {
+                Button(action: {
+                    print("pressed")
+                    startDisplaying = false
+                }) {
+                    Circle()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(.white)
+                        .overlay(
+                            Image(systemName: "chevron.left")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 20, height: 20)
                             
-                    )
-                    .padding()
-            }
+                        )
+                    
+                }
+                Spacer()
+                
+                Button(action: {
+                    
+                }) {
+                Capsule()
+                    .foregroundColor(.white)
+                    .frame(width: 170, height: 50)
+                    .overlay(Text("Back to Beginning"))
+                }
+                
+                Spacer()
+                HStack(spacing: 15) {
+                    Button(action: {
+                        withAnimation {
+                            startScrolling.toggle()
+                            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
+                                self.offset -= sliderValue * 2.25
+                                if !self.startScrolling {
+                                    timer.invalidate()
+                                }
+                            }
+                        }
+                    }) {
+                        Circle()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.white)
+                            .overlay(
+                                Image(systemName: startScrolling ? "pause.fill" : "play.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 25, height: 25)
+                                
+                            )
+                            .padding()
+                    }
+                    
+                    
+                    
+                    Text("Adjust autoscroll")
+                    Slider(value: $sliderValue, in: 0...1)
+                        .frame(width: 200)
+                }
+            }.padding()
         }
+        
         
     }
 }
