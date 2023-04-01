@@ -6,7 +6,6 @@ struct MyApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(OrientationInfo())
-//V2CALayer()
         }
     }
 }

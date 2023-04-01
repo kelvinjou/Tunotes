@@ -42,7 +42,7 @@ struct IntroView: View {
     @State var pageIndex = 0
     @State var numberOfPages = 5
     @State var selectedTrack = -1
-    
+    @State var clef = Clef(.treble)
     @Binding var progress: CGFloat
     let gradient1 = Gradient(colors: [.purple, .yellow])
     let gradient2 = Gradient(colors: [.blue, .purple])
@@ -51,13 +51,13 @@ struct IntroView: View {
             GeometryReader { g in
                 HStack {
                     let _ = print("selected track: ", selectedTrack)
-                    CALayerCreatorWrapper(selectedTrack: $selectedTrack, startDisplaying: $startDisplaying)
+                    CALayerCreatorWrapper(selectedTrack: $selectedTrack, startDisplaying: $startDisplaying, clef: $clef)
                 }
             }
-            .onAppear {
-                stateManagement.paddingWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack).testAccessMeasureAndNotes(selectedTrack: selectedTrack))).bounds.width
-
-            }
+//            .task {
+//                stateManagement.paddingWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack, clef: Clef(.treble)).testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: clef)).bounds.width
+//
+//            }
         } else {
             TabView(selection: $pageIndex) {
                 ForEach(0..<numberOfPages, id: \.self) { page in
@@ -65,7 +65,7 @@ struct IntroView: View {
                     case 0:
                         Intro_Page1(letsgo: $letsgo, pageIndex: $pageIndex)
                     case 1:
-                        ChooseTrackView(pageIndex: $pageIndex, selectedTrack: $selectedTrack, startDisplaying: $startDisplaying)
+                        ChooseTrackView(pageIndex: $pageIndex, selectedTrack: $selectedTrack, startDisplaying: $startDisplaying, chooseClef: $clef)
                     case 2:
                         Text("")
                     default:
@@ -159,6 +159,9 @@ struct ChooseTrackView: View {
     @Binding var selectedTrack: Int
     @Binding var startDisplaying: Bool
     
+    @Binding var chooseClef: Clef
+    @State var isClefTreble = true
+    
     @State var portraitAlertMessage: Bool = false
     @State private var progress: CGFloat = 0
         let gradient1 = Gradient(colors: [.purple, .yellow])
@@ -178,16 +181,28 @@ struct ChooseTrackView: View {
             
             
             ForEach(0..<ChooseMidiTrack().listOutAllNoteTracks()!.count - 1, id: \.self) { i in
-//                                var onlyKeys = Array(ChooseMidiTrack().listOutAllNoteTracks().keys)[i]
-//                                let keys: [String] = Array(ChooseMidiTrack().listOutAllNoteTracks()![i].keys)
-                let _ = print("i", i)
-                let _ = print("KEY", forDict.key.count)
             
                 Button(action: {
                     selectedTrack = i
                 }) {
-//                                    Text("Track \(i + 1)")
-                    Text("\(forDict.key[i])")
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 150, height: 30)
+                        .foregroundColor(selectedTrack == i ? Color.white : Color.secondary.opacity(0.8))
+                        .overlay( Text("\(forDict.key[i])") )
+                    
+                }
+            }
+            
+            Toggle(isOn: $isClefTreble) {
+                Text(isClefTreble ? "Display in treble clef" : "Display in bass clef")
+            }
+            .padding()
+            .onChange(of: isClefTreble) { value in
+                if value == true {
+                    chooseClef = Clef(.treble)
+                }
+                else {
+                    chooseClef = Clef(.bass)
                 }
             }
             
@@ -207,7 +222,7 @@ struct ChooseTrackView: View {
                         Text("Start displaying")
                             .foregroundColor(.white)
                     )
-                    .foregroundColor(selectedTrack == -1 ? .gray : .mint)
+                    .foregroundColor(selectedTrack == -1 ? .gray.opacity(0.75) : .mint.opacity(0.95))
 
             }.disabled(selectedTrack == -1 ? true : false)
             

@@ -65,7 +65,7 @@ class PremadeViews {
         return staff.rendered
     }
     
-    func beamsAndNoteheads(externalPitches: [NoteModel]) -> StyledPath.Composite {
+    func beamsAndNoteheads(externalPitches: [NoteModel], clef: Clef) -> StyledPath.Composite {
 //        let rhythm = Rhythm(1/>4, [(4,event(())),(2,event(())),(1,event(())),(2,event(()))])
 //        let beaming = DefaultBeamer.beaming(for: rhythm)
 //        let configuration = BeamsView.Configuration(slope: -0.125)
@@ -91,7 +91,7 @@ class PremadeViews {
         #warning("somehow add bar measures here")
         for (position, point, i) in zip3(positions, points, 0..<points.count) {
 //            print("REP93", representable[i].spelledPitch)
-            builder.add(point, at: position, noteDuration: externalPitches[i].duration, spelledNote: representable[i].spelledPitch)
+            builder.add(point, at: position, noteDuration: externalPitches[i].duration, spelledNote: representable[i].spelledPitch, clef: clef)
 //            builder.add(point, at: position + 10, noteDuration: externalPitches[i].duration)
 //            noteStemArray.append(NoteheadView(position: StaffModel, size: .init(staffSlotHeight: 40), noteDuration: externalPitches[i].duration))
             

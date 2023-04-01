@@ -120,7 +120,7 @@ extension StaffView {
         /// Creates an internal representation of the given `model` with the given `configuration`.
         public init(model: StaffModel, configuration: StaffConfiguration) {
 
-            self.clef = model.verticalAxis
+            self.clef = model.clef
             self.configuration = configuration
 
             startLines(at: 0)
@@ -129,14 +129,14 @@ extension StaffView {
                 
                 startLines(at: position)
                     for point in points {
-                        let (above, below) = point.ledgerLines(model.verticalAxis)
+                        let (above, below) = point.ledgerLines(model.clef)
 //                        print("143", model.spelledNote)
 //                        spelled note is empty
                         addLedgerLines(at: position, above: above, below: below)
                         let pointView = PointView(
                             of: point,
                             at: position,
-                            clef: model.verticalAxis,
+                            clef: model.clef,
                             staffSlotHeight: configuration.staffSlotHeight,
                             
                             noteDuration: 

@@ -12,5 +12,5 @@ public protocol VerticalPlotModel: PlotModel {
     associatedtype VerticalAxis: Axis
     
     /// Determines the way that information is mapped onto the vertical axis.
-    var verticalAxis: VerticalAxis { get }
+    var clef: VerticalAxis { get }
 }

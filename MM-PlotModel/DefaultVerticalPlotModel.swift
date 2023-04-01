@@ -10,7 +10,7 @@ public struct DefaultVerticalPlotModel: VerticalPlotModel {
     
     public typealias Entity = Double
     
-    public let verticalAxis = DefaultAxis<Double>()
+    public let clef = DefaultAxis<Double>()
     public let points: [Double: [DefaultVerticalPointModel]]
     
     public init(_ points: [Double: [DefaultVerticalPointModel]]) {

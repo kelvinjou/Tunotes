@@ -35,9 +35,6 @@ struct MusicAsApp: View {
     var body: some View {
         VStack {
             Text("Hello, world!")
-//            Canvas { context, size in
-//
-//            }
             ZStack {
                 VStack {
                     Divider().frame(height: 2).overlay(.black)

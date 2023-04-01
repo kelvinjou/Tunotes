@@ -11,10 +11,10 @@ import Pitch
 import Math
 import DataStructures
 
-public struct IntervalQuality {
-    
-}
-
-public struct OrderedIntervalDescriptor {
-    
-}
+//public struct IntervalQuality {
+//    
+//}
+//
+//public struct OrderedIntervalDescriptor {
+//    
+//}

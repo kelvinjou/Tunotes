@@ -19,7 +19,7 @@ public struct StaffModel: VerticalPlotModel {
     public typealias HorizontalCoordinate = Double
     public typealias Entity = SpelledPitch
     
-    public let verticalAxis: Clef
+    public let clef: Clef
     public let horizontalAxis = DefaultAxis<Double>()
     public let points: [Double: [StaffPointModel]]
     public let noteDuration: [Double]
@@ -27,7 +27,7 @@ public struct StaffModel: VerticalPlotModel {
     
     /// Createss a `StaffModel` with the given `clef` and the given `points`.
     public init(clef: Clef = Clef(.treble), points: [Double: [StaffPointModel]], noteDuration: [Double], spelledNote: [SpelledPitch]) {
-        self.verticalAxis = clef
+        self.clef = clef
         self.points = points
         self.noteDuration = noteDuration
         self.spelledNote = spelledNote

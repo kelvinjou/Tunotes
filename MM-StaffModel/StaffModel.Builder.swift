@@ -29,11 +29,12 @@ extension StaffModel {
             self.clef = clef
         }
         
-        public func add(_ point: Point, at position: Double, noteDuration: Double, spelledNote: SpelledPitch) {
+        public func add(_ point: Point, at position: Double, noteDuration: Double, spelledNote: SpelledPitch, clef: Clef = Clef(.treble)) {
             points[position, default: []].append(point)
             noteDurations[position, default: []].append(noteDuration)
             spelledNotes[position, default: []].append(spelledNote)
-//            points1[position, default: [[:]] ].append([point : noteDuration])
+
+            self.clef = clef
         }
         
         public func build() -> StaffModel {

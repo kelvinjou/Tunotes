@@ -15,10 +15,15 @@ import UIKit
 import Path
 import Pitch
 
+//class UniversalLayer: ObservableObject {
+//    @Published var layer: CALayerCreator
+//}
 
 struct CALayerCreatorWrapper: View {
     @Binding var selectedTrack: Int
     @Binding var startDisplaying: Bool
+    
+    @Binding var clef: Clef
     
     @State private var offset: CGFloat = 0
     @State var minWidth = 0.0
@@ -27,17 +32,28 @@ struct CALayerCreatorWrapper: View {
     
     @State private var sliderValue: Double = 0.5
     
+    // MARK: make this into a tuple: notStarted, rendering, and finished render
+    @State var doneRendering: Bool = false
     var body: some View {
-        
+        let movedOffset = self.offset
         ZStack(alignment: Alignment.bottom) {
+            let layer = CALayerCreator(selectedTrack: selectedTrack, clef: clef, doneRendering: $doneRendering)
             //            ZStack(alignment: Alignment.bottomLeading) {
             ScrollView(.horizontal) {
-                CALayerCreator(selectedTrack: selectedTrack)
+//                GeometryReader { proxy in
+//                    let anotherOffset = proxy.frame(in: .named("scroll")).minY
+//                    let _ = print(anotherOffset)
                 
-                    .padding(.trailing, minWidth)
-                    .offset(x: self.offset, y: 0)
-                    .onAppear {
-                        minWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack).testAccessMeasureAndNotes(selectedTrack: selectedTrack))).bounds.width                        }
+                    layer
+                        .padding(.trailing, minWidth)
+                        .offset(x: self.offset, y: 0)
+                        .onAppear {
+                            minWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: layer.testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: Clef(.treble))).bounds.width
+                            
+//                        }
+//                        .coordinateSpace(name: "scroll")
+                }
+                
             }
             HStack {
                 Button(action: {
@@ -54,18 +70,25 @@ struct CALayerCreatorWrapper: View {
                                 .frame(width: 20, height: 20)
                             
                         )
+                        .opacity(0.85)
+
                     
                 }
-                Spacer()
-                
-                Button(action: {
-                    
-                }) {
-                Capsule()
-                    .foregroundColor(.white)
-                    .frame(width: 170, height: 50)
-                    .overlay(Text("Back to Beginning"))
-                }
+//                Spacer()
+//
+//                Button(action: {
+//                    withAnimation {
+//
+//                        self.offset = -self.offset
+//                    }
+//                }) {
+//                Capsule()
+//                    .foregroundColor(.white)
+//                    .frame(width: 170, height: 50)
+//                    .overlay(Text("Back to Beginning"))
+//                    .opacity(0.85)
+//
+//                }
                 
                 Spacer()
                 HStack(spacing: 15) {
@@ -90,6 +113,7 @@ struct CALayerCreatorWrapper: View {
                                     .frame(width: 25, height: 25)
                                 
                             )
+                            .opacity(0.85)
                             .padding()
                     }
                     
@@ -108,7 +132,10 @@ struct CALayerCreatorWrapper: View {
 
 struct CALayerCreator: UIViewRepresentable {
     var selectedTrack: Int
+    var clef: Clef
     
+    var observation: NSKeyValueObservation?
+    @Binding var doneRendering: Bool
     func makeUIView(context: Context) -> some UIView {
         let scrollView: UIScrollView = {
                let view = UIScrollView()
@@ -126,10 +153,19 @@ struct CALayerCreator: UIViewRepresentable {
                 scrollView.bottomAnchor.constraint(equalTo: rect.bottomAnchor, constant: -8.0).isActive = true
     
 //          MARK: for singular composite
-        lazy var layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack)))
+        lazy var layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: clef))
 
 
         rect.layer.addSublayer(layer2)
+        
+        CATransaction.begin()
+        CATransaction.setCompletionBlock({
+            print("Layer rendering completed!")
+            doneRendering = true
+        })
+        layer2.displayIfNeeded() // Trigger rendering of layer
+        CATransaction.commit()
+        
         return rect
 
         
