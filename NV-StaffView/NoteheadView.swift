@@ -64,18 +64,21 @@ public class NoteheadView: Renderable {
         case 0.5:
             pathNote = eighthNote(stemAbove: stemGoesUp)
             noteIsWhite = 0
+        case 1.0:
+            pathNote = quarterNote(stemAbove: stemGoesUp)
+            noteIsWhite = 0
         case 1.5:
             pathNote = dottedQuarterNote(stemAbove: stemGoesUp)
             noteIsWhite = 0
         case 2.0:
             pathNote = halfNote(stemAbove: stemGoesUp)
-            noteIsWhite = 0
+            noteIsWhite = 1
         default:
             pathNote = wholeNote(stemAbove: stemGoesUp)
             noteIsWhite = 1
         }
 
-        let styling = Styling(fill: Fill(color: Color(white: noteIsWhite, alpha: 0.8), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
+        let styling = Styling(fill: Fill(color: Color(white: noteIsWhite, alpha: noteIsWhite == 1 ? 0 : 0.9), rule: .evenOdd), stroke: Stroke(width: 3, color: .black))
         
         
         let styledPath = StyledPath(frame: frame, path: pathNote, styling: styling)
@@ -125,6 +128,21 @@ public class NoteheadView: Renderable {
         ovalPath.apply(CGAffineTransform(rotationAngle: stemAbove ? CGFloat.pi : 0))
         ovalPath.apply(CGAffineTransform(translationX: stemAbove ? 30 : 0, y: stemAbove ? 20 : 0))
         ovalPath.close()
+        return Path
+            .init(ovalPath.cgPath)
+    }
+    
+    private func quarterNote(stemAbove: Bool) -> Path {
+        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+        
+        ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
+        ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
+        ovalPath.move(to: CGPoint(x: 0, y: 10))
+        ovalPath.addLine(to: CGPoint(x: 0, y: 110))
+        ovalPath.apply(CGAffineTransform(rotationAngle: stemAbove ? CGFloat.pi : 0))
+        ovalPath.apply(CGAffineTransform(translationX: stemAbove ? 30 : 0, y: stemAbove ? 20 : 0))
+        ovalPath.close()
+        
         return Path
             .init(ovalPath.cgPath)
     }

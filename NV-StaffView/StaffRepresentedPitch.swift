@@ -9,7 +9,7 @@
 
 import Geometry
 import Rendering
-
+import Pitch
 /// TODO: Add configuration
 public struct StaffRepresentedPitch {
     

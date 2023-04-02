@@ -35,7 +35,7 @@ extension Pitch {
     /// - Throws: `Pitch.Spelling.Error.incompatibleSpelling` if the given `spelling` is not
     /// appropriate for this `Pitch`.
     ///
-    public func spelled(with spelling: Pitch.Spelling) throws -> SpelledPitch {
+    public func spelled(with spelling: Pitch.Spelling, accidental: Pitch.Spelling.Modifier) throws -> SpelledPitch {
         guard spelling.pitchClass == self.class else {
             throw Error.incompatibleSpelling(spelling, self)
         }
@@ -46,7 +46,7 @@ extension Pitch {
     }
 
     /// - Returns: `SpelledPitch` with the default spelling for this `Pitch`.
-    public var spelledWithDefaultSpelling: SpelledPitch {
-        return try! spelled(with: defaultSpelling)
-    }
+//    public var spelledWithDefaultSpelling: SpelledPitch {
+//        return try! spelled(with: defaultSpelling, accidental: accidental)
+//    }
 }
