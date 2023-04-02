@@ -5,13 +5,6 @@
 //  Created by James Bean on 1/15/17.
 //
 //
-
-
-
-/// A single point on a `Staff`.
-///
-/// - TODO: Articulations
-/// - TODO: Articulation positioning
 ///
 public struct StaffPointModel: PointModel, Hashable, Comparable {
     public static func < (lhs: StaffPointModel, rhs: StaffPointModel) -> Bool {

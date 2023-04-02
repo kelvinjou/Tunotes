@@ -81,17 +81,3 @@ func reachAroundAdjustment (for spelling: Pitch.Spelling) -> Int {
     return 0
 }
 
-let semitonesBySteps = [
-    0.0: 0,
-    0.5: 1,
-    1.0: 2,
-    1.5: 3,
-    2.0: 4,
-    3.0: 5,
-    3.5: 6,
-    4.0: 7,
-    4.5: 8,
-    5.0: 9,
-    5.5: 10,
-    6.0: 11
-]

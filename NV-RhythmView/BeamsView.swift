@@ -60,3 +60,8 @@ public struct BeamsView: Renderable {
         self = builder.build()
     }
 }
+
+public enum Orientation {
+    case stemsUp
+    case stemsDown
+}

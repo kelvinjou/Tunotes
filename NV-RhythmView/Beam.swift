@@ -11,9 +11,9 @@ import Path
 
 /// - TODO: Implement rotated sizing, rather than sheering
 public struct Beam {
-    
+
     public let path: Path
-    
+
     public init(start: Point, end: Point, width: Double) {
         self.path = Path(vertices: [
             start.translatedBy(y: 0.5 * width),

@@ -17,38 +17,32 @@ import Pitch
 
 
 struct CALayerCreatorWrapper: View {
-    @EnvironmentObject var stateManagement: StateManagement
-    @Binding var selectedTrack: Int
-    @Binding var startDisplaying: Bool
+    @EnvironmentObject private var stateManagement: StateManagement
+    @Binding private var selectedTrack: Int
+    @Binding private var startDisplaying: Bool
     
-    @Binding var clef: Clef
+    @Binding private var clef: Clef
     
     @State private var offset: CGFloat = 0
-    @State var minWidth = 0.0
+    @State private var minWidth = 0.0
     
-    @State var startScrolling = false
+    @State private var startScrolling = false
     
     @State private var sliderValue: Double = 0.5
     
     // MARK: make this into a tuple: notStarted, rendering, and finished render
-    @State var doneRendering: Bool = false
+    @State private var doneRendering: Bool = false
     var body: some View {
         let movedOffset = self.offset
         ZStack(alignment: Alignment.bottom) {
-            let _ = print("38 Wrapper", stateManagement.selectedSong)
             let layer = CALayerCreator(selectedTrack: selectedTrack, clef: clef, song: stateManagement.selectedSong, doneRendering: $doneRendering)
-            //            ZStack(alignment: Alignment.bottomLeading) {
             ScrollView(.horizontal) {
-                    layer
-                        .padding(.trailing, minWidth)
-                        .offset(x: self.offset, y: 0)
-                        .onAppear {
-                            print("45 CALayerWrapper", stateManagement.selectedSong)
-                            minWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: layer.testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: Clef(.treble))).bounds.width
-                            
-//                        }
-//                        .coordinateSpace(name: "scroll")
-                }
+                layer
+                    .padding(.trailing, minWidth)
+                    .offset(x: self.offset, y: 0)
+                    .onAppear {
+                        minWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: layer.testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: Clef(.treble))).bounds.width
+                    }
                 
             }
             HStack {
@@ -67,24 +61,24 @@ struct CALayerCreatorWrapper: View {
                             
                         )
                         .opacity(0.85)
-
+                    
                     
                 }
-//                Spacer()
-//
-//                Button(action: {
-//                    withAnimation {
-//
-//                        self.offset = -self.offset
-//                    }
-//                }) {
-//                Capsule()
-//                    .foregroundColor(.white)
-//                    .frame(width: 170, height: 50)
-//                    .overlay(Text("Back to Beginning"))
-//                    .opacity(0.85)
-//
-//                }
+                //                Spacer()
+                //
+                //                Button(action: {
+                //                    withAnimation {
+                //
+                //                        self.offset = -self.offset
+                //                    }
+                //                }) {
+                //                Capsule()
+                //                    .foregroundColor(.white)
+                //                    .frame(width: 170, height: 50)
+                //                    .overlay(Text("Back to Beginning"))
+                //                    .opacity(0.85)
+                //
+                //                }
                 
                 Spacer()
                 HStack(spacing: 15) {
@@ -140,24 +134,24 @@ struct CALayerCreator: UIViewRepresentable {
     @Binding var doneRendering: Bool
     func makeUIView(context: Context) -> some UIView {
         let scrollView: UIScrollView = {
-               let view = UIScrollView()
-               view.translatesAutoresizingMaskIntoConstraints = false
-               return view
-           }()
+            let view = UIScrollView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+            return view
+        }()
         let rect = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 2))
         
         rect.addSubview(scrollView)
-                
-                // constrain the scroll view to 8-pts on each side
-                scrollView.leftAnchor.constraint(equalTo: rect.leftAnchor, constant: 8.0).isActive = true
-                scrollView.topAnchor.constraint(equalTo: rect.topAnchor, constant: 8.0).isActive = true
-                scrollView.rightAnchor.constraint(equalTo: rect.rightAnchor, constant: -8.0).isActive = true
-                scrollView.bottomAnchor.constraint(equalTo: rect.bottomAnchor, constant: -8.0).isActive = true
-    
-//          MARK: for singular composite
+        
+        // constrain the scroll view to 8-pts on each side
+        scrollView.leftAnchor.constraint(equalTo: rect.leftAnchor, constant: 8.0).isActive = true
+        scrollView.topAnchor.constraint(equalTo: rect.topAnchor, constant: 8.0).isActive = true
+        scrollView.rightAnchor.constraint(equalTo: rect.rightAnchor, constant: -8.0).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: rect.bottomAnchor, constant: -8.0).isActive = true
+        
+        //          MARK: for singular composite
         lazy var layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: clef))
-
-
+        
+        
         rect.layer.addSublayer(layer2)
         
         CATransaction.begin()
@@ -169,9 +163,9 @@ struct CALayerCreator: UIViewRepresentable {
         CATransaction.commit()
         
         return rect
-
         
-    
+        
+        
     }
     func imageFromLayer(layer:CALayer) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(layer.frame.size, layer.isOpaque, 0)
@@ -207,17 +201,17 @@ struct CALayerCreator: UIViewRepresentable {
                         return .natural
                     }
                 }()
-//                rawAccidental.map { value in
-//                    if value == "♯" {
-//                        accidental = .sharp
-//                    }
-//                    if value == "♭" {
-//                        accidental = .flat
-//                    }
-//                    else {
-//                        accidental = .natural
-//                    }
-//                }
+                //                rawAccidental.map { value in
+                //                    if value == "♯" {
+                //                        accidental = .sharp
+                //                    }
+                //                    if value == "♭" {
+                //                        accidental = .flat
+                //                    }
+                //                    else {
+                //                        accidental = .natural
+                //                    }
+                //                }
                 
                 var noteModel = NoteModel(spelledPitch: SpelledPitch(.b, .natural), duration: 0)
                 Keys.allCases.forEach {
@@ -248,29 +242,29 @@ struct CALayerCreator: UIViewRepresentable {
     
     func drawLine(position: CGFloat) -> CAShapeLayer {
         // Create a CAShapeLayer
-                let shapeLayer = CAShapeLayer()
-
-                // The Bezier path that we made needs to be converted to
-                // a CGPath before it can be used on a layer.
-                shapeLayer.path = drawUIBezierPath().cgPath
-
-                // apply other properties related to the path
-                shapeLayer.strokeColor = UIColor.gray.cgColor
-                shapeLayer.fillColor = UIColor.white.cgColor
-                shapeLayer.lineWidth = 5.0
-                shapeLayer.position = CGPoint(x: position, y: 10)
-
-                // add the new layer to our custom view
-                return shapeLayer
+        let shapeLayer = CAShapeLayer()
+        
+        // The Bezier path that we made needs to be converted to
+        // a CGPath before it can be used on a layer.
+        shapeLayer.path = drawUIBezierPath().cgPath
+        
+        // apply other properties related to the path
+        shapeLayer.strokeColor = UIColor.gray.cgColor
+        shapeLayer.fillColor = UIColor.white.cgColor
+        shapeLayer.lineWidth = 5.0
+        shapeLayer.position = CGPoint(x: position, y: 10)
+        
+        // add the new layer to our custom view
+        return shapeLayer
     }
     
     func drawUIBezierPath() -> UIBezierPath {
         // create a new path
-            let path = UIBezierPath()
-            path.move(to: CGPoint(x: 2, y: 100))
-            path.addLine(to: CGPoint(x: 2, y: 25))
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 2, y: 100))
+        path.addLine(to: CGPoint(x: 2, y: 25))
         
-            return path
+        return path
     }
 }
 
@@ -305,23 +299,22 @@ enum Keys: String, CaseIterable {
 
 
 extension String {
-
     var length: Int {
         return count
     }
-
+    
     subscript (i: Int) -> String {
         return self[i ..< i + 1]
     }
-
+    
     func substring(fromIndex: Int) -> String {
         return self[min(fromIndex, length) ..< length]
     }
-
+    
     func substring(toIndex: Int) -> String {
         return self[0 ..< max(0, toIndex)]
     }
-
+    
     subscript (r: Range<Int>) -> String {
         let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
                                             upper: min(length, max(0, r.upperBound))))

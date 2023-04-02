@@ -245,23 +245,12 @@ extension Pitch.Spelling.Modifier: Hashable { }
 extension Pitch.Spelling: Equatable { }
 extension Pitch.Spelling: Hashable { }
 
-extension Pitch.Spelling {
-
-    // MARK: - Spelling Distance
-
-    public var spellingDistance: LineOfFifths.Distance {
-        return LineOfFifths.distance(ofPitchSpelling: self)
-    }
-}
-
-//extension Pitch.Spelling: Codable { }
-//extension Pitch.Spelling.Modifier: Codable { }
 
 extension Pitch.Spelling: Codable { }
 extension Pitch.Spelling.Modifier: Codable { }
 extension Pitch.Spelling.Modifier.Pythagorean: Codable { }
 extension Pitch.Spelling.Modifier.Alteration: Codable {
-    
+
     private enum CodingKeys: String, CodingKey {
         case ptolemaic
         case septimal
@@ -269,11 +258,11 @@ extension Pitch.Spelling.Modifier.Alteration: Codable {
         case tridecimal
         case cents
     }
-    
+
     enum CodingError: Error {
         case decoding(String)
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         if let amount = try? values.decode(Int.self, forKey: .ptolemaic) {
@@ -294,7 +283,7 @@ extension Pitch.Spelling.Modifier.Alteration: Codable {
         }
         throw CodingError.decoding("Decoding Error: \(dump(values))")
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {

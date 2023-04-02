@@ -32,3 +32,15 @@ extension StaffRepresentablePitch: Comparable {
         return lhs.spelledPitch < rhs.spelledPitch
     }
 }
+
+public typealias StaffSlot = Int
+
+public enum Notehead {
+    case ord
+    case diamondOpen
+    case diamondClosed
+    case circleOpen
+    case circleClosed
+    case squareOpen
+    case squareClosed
+}

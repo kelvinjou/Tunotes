@@ -9,10 +9,10 @@
 import Rendering
 
 public protocol AxisView: Renderable {
-    
+
     associatedtype Position
     associatedtype Configuration
-    
+
     var position: Position { get }
     var configuration: Configuration { get }
 }
