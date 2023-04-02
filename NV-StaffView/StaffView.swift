@@ -156,7 +156,7 @@ extension StaffView {
             
 
             // FIXME: Probably done from the outside
-            stopLines(at: model.points.keys.max()! + 100)
+            stopLines(at: model.points.keys.max() ?? 0 + 100)
         }
 
         /// Starts staff lines at the given position.

@@ -15,11 +15,9 @@ import UIKit
 import Path
 import Pitch
 
-//class UniversalLayer: ObservableObject {
-//    @Published var layer: CALayerCreator
-//}
 
 struct CALayerCreatorWrapper: View {
+    @EnvironmentObject var stateManagement: StateManagement
     @Binding var selectedTrack: Int
     @Binding var startDisplaying: Bool
     
@@ -37,17 +35,15 @@ struct CALayerCreatorWrapper: View {
     var body: some View {
         let movedOffset = self.offset
         ZStack(alignment: Alignment.bottom) {
-            let layer = CALayerCreator(selectedTrack: selectedTrack, clef: clef, doneRendering: $doneRendering)
+            let _ = print("38 Wrapper", stateManagement.selectedSong)
+            let layer = CALayerCreator(selectedTrack: selectedTrack, clef: clef, song: stateManagement.selectedSong, doneRendering: $doneRendering)
             //            ZStack(alignment: Alignment.bottomLeading) {
             ScrollView(.horizontal) {
-//                GeometryReader { proxy in
-//                    let anotherOffset = proxy.frame(in: .named("scroll")).minY
-//                    let _ = print(anotherOffset)
-                
                     layer
                         .padding(.trailing, minWidth)
                         .offset(x: self.offset, y: 0)
                         .onAppear {
+                            print("45 CALayerWrapper", stateManagement.selectedSong)
                             minWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: layer.testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: Clef(.treble))).bounds.width
                             
 //                        }
@@ -130,10 +126,16 @@ struct CALayerCreatorWrapper: View {
     }
 }
 
+enum RenderingState {
+    case notStarted
+    case rendering
+    case finishedRendering
+}
+
 struct CALayerCreator: UIViewRepresentable {
     var selectedTrack: Int
     var clef: Clef
-    
+    var song: URL
     var observation: NSKeyValueObservation?
     @Binding var doneRendering: Bool
     func makeUIView(context: Context) -> some UIView {
@@ -181,8 +183,7 @@ struct CALayerCreator: UIViewRepresentable {
     func updateUIView(_ uiView: UIViewType, context: Context) {}
     
     func testAccessMeasureAndNotes(selectedTrack: Int) -> [NoteModel] {
-        
-        let score = MusicScore(url: ScoreSamples.url_spring1st)!
+        let score = MusicScore(url: song)!
         
         var noteModelArray: [NoteModel] = []
         var numberOfNotes: Int = 0
@@ -193,21 +194,39 @@ struct CALayerCreator: UIViewRepresentable {
                 let fullDesc = i.note.pitch.key.description
                 let notePitch = fullDesc[0]
                 let rawAccidental = fullDesc[1]
+                print("accidental", rawAccidental)
                 
-                var accidental: Pitch.Spelling.Modifier = .natural
-                rawAccidental.map { value in
-                    if value == "♯" {
-                        accidental = .sharp
+                var accidental: Pitch.Spelling.Modifier = {
+                    if rawAccidental == "♯" {
+                        return .sharp
                     }
-                }
+                    if rawAccidental == "♭" {
+                        return .flat
+                    }
+                    else {
+                        return .natural
+                    }
+                }()
+//                rawAccidental.map { value in
+//                    if value == "♯" {
+//                        accidental = .sharp
+//                    }
+//                    if value == "♭" {
+//                        accidental = .flat
+//                    }
+//                    else {
+//                        accidental = .natural
+//                    }
+//                }
                 
                 var noteModel = NoteModel(spelledPitch: SpelledPitch(.b, .natural), duration: 0)
                 Keys.allCases.forEach {
                     if notePitch == $0.rawValue {
                         noteModel = NoteModel(
                             spelledPitch: SpelledPitch(
-                                spelling: Keys(rawValue: notePitch)!.keyMapping,
-                                octave: i.note.pitch.octave),
+                                Keys(rawValue: notePitch)!.keyMapping, // spelling
+                                accidental, // accidental
+                                i.note.pitch.octave), //octave
                             duration: i.duration,
                             measureNum: j
                         )

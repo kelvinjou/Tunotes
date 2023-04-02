@@ -6,8 +6,9 @@ import MusicSymbol
 //
 
 struct ContentView: View {
-    @EnvironmentObject var orientationInfo: OrientationInfo
-    
+    @StateObject var orientationInfo = OrientationInfo()
+    @StateObject var stateManagement = StateManagement()
+    @StateObject var forDict = ForDict(songURL: ScoreSamples.url_spring1st)
     @State private var progress: CGFloat = 0
         let gradient1 = Gradient(colors: [.purple, .yellow])
         let gradient2 = Gradient(colors: [.blue, .purple])
@@ -25,20 +26,21 @@ struct ContentView: View {
                         }
             Text("Device is in '\(orientationInfo.orientation == .portrait ? "portrait" : "landscape")' ")
             IntroView(progress: $progress)
-        }
+        }.environmentObject(stateManagement)
+            .environmentObject(orientationInfo)
+            .environmentObject(forDict)
     }
 }
 
 class StateManagement: ObservableObject {
     @Published var paddingWidth: Double = 0
+    @Published var selectedSong: URL = URL(string: "/Users/a970/Desktop/Developer/CorrectSwiftPMFormat.swiftpm/Resources/buttter.mid")!
 }
 
 struct IntroView: View {
     @EnvironmentObject var orientationInfo: OrientationInfo
-    @StateObject var stateManagement = StateManagement()
-    
     @State var letsgo: Bool = false
-    @State var startDisplaying = false
+    @State var canStartDisplaying = false
     @State var pageIndex = 0
     @State var numberOfPages = 5
     @State var selectedTrack = -1
@@ -47,26 +49,24 @@ struct IntroView: View {
     let gradient1 = Gradient(colors: [.purple, .yellow])
     let gradient2 = Gradient(colors: [.blue, .purple])
     var body: some View {
-        if startDisplaying {
+        if canStartDisplaying {
             GeometryReader { g in
                 HStack {
                     let _ = print("selected track: ", selectedTrack)
-                    CALayerCreatorWrapper(selectedTrack: $selectedTrack, startDisplaying: $startDisplaying, clef: $clef)
+                    CALayerCreatorWrapper(selectedTrack: $selectedTrack, startDisplaying: $canStartDisplaying, clef: $clef)
                 }
             }
-//            .task {
-//                stateManagement.paddingWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: CALayerCreator(selectedTrack: selectedTrack, clef: Clef(.treble)).testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: clef)).bounds.width
-//
-//            }
         } else {
             TabView(selection: $pageIndex) {
                 ForEach(0..<numberOfPages, id: \.self) { page in
                     switch pageIndex {
                     case 0:
-                        Intro_Page1(letsgo: $letsgo, pageIndex: $pageIndex)
+                        Intro_Page1(letsgo: $letsgo, pageIndex: $pageIndex, progress: $progress)
                     case 1:
-                        ChooseTrackView(pageIndex: $pageIndex, selectedTrack: $selectedTrack, startDisplaying: $startDisplaying, chooseClef: $clef)
+                        ListOfSongs(pageIndex: $pageIndex, progress: $progress)
                     case 2:
+                        ChooseTrackView(pageIndex: $pageIndex, selectedTrack: $selectedTrack, startDisplaying: $canStartDisplaying, chooseClef: $clef, progress: $progress)
+                    case 3:
                         Text("")
                     default:
                         Text("Page whatever")
@@ -74,7 +74,7 @@ struct IntroView: View {
 
                 }.onChange(of: orientationInfo.orientation) { newValue in
                     if newValue == .landscape && selectedTrack != -1 {
-                        startDisplaying.toggle()
+                        canStartDisplaying.toggle()
                     }
                 }
             }.onAppear {
@@ -86,29 +86,11 @@ struct IntroView: View {
         
     }
 }
-        
-struct UIPageControlView: UIViewRepresentable {
-    @Binding var currentPage: Int
-    @Binding var numberOfPages: Int
-    
-    func makeUIView(context: Context) -> UIPageControl {
-        let uiView = UIPageControl()
-        uiView.backgroundStyle = .prominent
-        uiView.currentPage = currentPage
-        uiView.numberOfPages = numberOfPages
-        return uiView
-    }
-    
-    func updateUIView(_ uiView: UIPageControl, context: Context) {
-        uiView.currentPage = currentPage
-        uiView.numberOfPages = numberOfPages
-    }
-}
 
 struct Intro_Page1: View {
     @Binding var letsgo: Bool
     @Binding var pageIndex: Int
-    @State private var progress: CGFloat = 0
+    @Binding var progress: CGFloat
         let gradient1 = Gradient(colors: [.purple, .yellow])
         let gradient2 = Gradient(colors: [.blue, .purple])
     var body: some View {
@@ -123,7 +105,7 @@ struct Intro_Page1: View {
                             }
                         }
             VStack {
-                Text("Welcome to Tunotes!")
+                Text("Welcome to Melodi!")
                     .bold()
                     .font(.title)
                 Text("🎸🎹🎻🎷🎺")
@@ -154,7 +136,9 @@ struct Intro_Page1: View {
 
 struct ChooseTrackView: View {
     @EnvironmentObject var orientationInfo: OrientationInfo
-    @ObservedObject var forDict = ForDict()
+    @EnvironmentObject var stateManagement: StateManagement
+
+    @EnvironmentObject var forDict: ForDict
     @Binding var pageIndex: Int
     @Binding var selectedTrack: Int
     @Binding var startDisplaying: Bool
@@ -163,10 +147,13 @@ struct ChooseTrackView: View {
     @State var isClefTreble = true
     
     @State var portraitAlertMessage: Bool = false
-    @State private var progress: CGFloat = 0
+    @Binding var progress: CGFloat
         let gradient1 = Gradient(colors: [.purple, .yellow])
         let gradient2 = Gradient(colors: [.blue, .purple])
+    
+    
     var body: some View {
+        NavigationView {
         ZStack {
             Rectangle()
                         .animatableGradient(fromGradient: gradient1, toGradient: gradient2, progress: progress)
@@ -174,23 +161,22 @@ struct ChooseTrackView: View {
                         .opacity(0.6)
                         
         VStack {
-            Text("Choose Your Track")
-                .bold()
-                .font(.headline)
-                .padding(10)
             
             
-            ForEach(0..<ChooseMidiTrack().listOutAllNoteTracks()!.count - 1, id: \.self) { i in
-            
-                Button(action: {
-                    selectedTrack = i
-                }) {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 150, height: 30)
-                        .foregroundColor(selectedTrack == i ? Color.white : Color.secondary.opacity(0.8))
-                        .overlay( Text("\(forDict.key[i])") )
-                    
-                }
+            ForEach(0..<ChooseMidiTrack().listOutAllNoteTracks(songURL: stateManagement.selectedSong)!.count - 1, id: \.self) { i in
+                
+                
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundColor(selectedTrack == i ? .green : .white)
+                    .frame(width: 300, height: 50)
+                    .overlay(
+                        Text("\(forDict.key[i])")
+                    )
+                    .onTapGesture {
+                        selectedTrack = i
+                    }
+                
+                
             }
             
             Toggle(isOn: $isClefTreble) {
@@ -206,13 +192,17 @@ struct ChooseTrackView: View {
                 }
             }
             
+            Text(orientationInfo.orientation == .portrait ? "turn your phone into landscape mode" : "")
+            
             Button(action: {
                 self.portraitAlertMessage = true
                 if orientationInfo.orientation == .portrait {
                     print("turn phone into landscape")
                 }
-                else {
+                if orientationInfo.orientation == .landscape {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     startDisplaying.toggle()
+                    }
                 }
                 
             }) {
@@ -224,7 +214,9 @@ struct ChooseTrackView: View {
                     )
                     .foregroundColor(selectedTrack == -1 ? .gray.opacity(0.75) : .mint.opacity(0.95))
 
-            }.disabled(selectedTrack == -1 ? true : false)
+            }
+//            .disabled((orientationInfo.orientation == .portrait) && (selectedTrack == -1) ? true : false)
+            .disabled(orientationInfo.orientation == .portrait ? true : false)
             
             if orientationInfo.orientation == .portrait && self.portraitAlertMessage == true {
                 Label {
@@ -238,6 +230,16 @@ struct ChooseTrackView: View {
             }
         }
         }
+        .navigationBarTitle("Choose Track")
+        .navigationBarItems(
+            leading: Button(action: {
+                pageIndex -= 1
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(.primary)
+            }
+        )
+        }
     }
 }
 
@@ -245,9 +247,9 @@ class ForDict: ObservableObject {
     @Published var key: [String] = []
     @Published var value = []
     
-    init() {
+    init(songURL: URL) {
         
-        for keyValue in ChooseMidiTrack().listOutAllNoteTracks()! {
+        for keyValue in ChooseMidiTrack().listOutAllNoteTracks(songURL: songURL)! {
             for (key, value) in keyValue {
                 print("\(key), \(value)")
                 self.key.append(key)

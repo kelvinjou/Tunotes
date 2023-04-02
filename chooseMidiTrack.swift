@@ -15,26 +15,20 @@ class ChooseMidiTrack {
 //    private let midiFileController = MidiFileController()
     let midi = MidiData()
     let data = ScoreSamples.url_spring1st
-    func listOutAllNoteTracks() -> [ [String : MidiNoteTrack] ]? {
+    
+    func listOutAllNoteTracks(songURL: URL) -> [ [String : MidiNoteTrack] ]? {
         var listOfNoteTracks: [MidiNoteTrack]
         var listOfDict: [ [String : MidiNoteTrack] ] = [[ : ]]
-        do {
-//            try midi.load(data: FakeMidiData.midiDataTempo60)
-//            let data = try midiFileController.data(fromFileName: "MIDI_sample.mid")
-//            sut.load(data: data)
-            guard let url = Bundle.main.url(forResource: "Beethoven_-_Violin_Sonata_No.5_Op.24_Spring_movement_I._Allegro", withExtension: "mid"),
-                let data = try? Data(contentsOf: url) else {
-                print("failed")
-                return nil
-            }
-            midi.load(data: data)
-            print("DIE FOR YOU", getMusicParts2(midi: midi))
-            //            print("HEREEEE", MIDIScoreParser().getMusicParts(midi: midi)[0].meta.instrument)
-            
-            
-        } catch {
-            print(error.localizedDescription)
+        
+        //        guard let url = URL(songURL),
+        //            guard let url = Bundle.main.url(forResource: "Beethoven_-_Violin_Sonata_No.5_Op.24_Spring_movement_I._Allegro", withExtension: "mid"),
+        guard let data = try? Data(contentsOf: songURL) else {
+            print("failed")
+            return nil
         }
+        midi.load(data: data)
+        print("DIE FOR YOU", getMusicParts2(midi: midi))
+        
         
         print(midi.noteTracks.count)
         
@@ -53,7 +47,6 @@ class ChooseMidiTrack {
 //        listOfNoteTracks = midi.noteTracks
         return listOfDict
     }
-    
     func getMusicParts2(midi: MidiData) -> [String] {
         var notesInTracks: [[NoteInScore]] = []
         var result: [String] = []
@@ -64,7 +57,7 @@ class ChooseMidiTrack {
 //            let notes = notesInTracks[idx]
 //
 //            // skip empty track
-//            if notes.isEmpty {
+//            if midi.noteTracks[idx].isEmpty {
 //                continue
 //            }
 
