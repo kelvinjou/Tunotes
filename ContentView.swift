@@ -25,9 +25,10 @@ struct ContentView: View {
                 }
             Text("Device is in '\(orientationInfo.orientation == .portrait ? "portrait" : "landscape")' ")
             IntroView(progress: $progress)
-        }.environmentObject(stateManagement)
-            .environmentObject(orientationInfo)
-            .environmentObject(forDict)
+        }
+        .environmentObject(stateManagement)
+        .environmentObject(orientationInfo)
+        .environmentObject(forDict)
     }
 }
 
@@ -185,7 +186,7 @@ struct ChooseTrackView: View {
                         }
                     }
                     
-                    Text(orientationInfo.orientation == .portrait ? "turn your phone into landscape mode" : "")
+                    
                     
                     Button(action: {
                         self.portraitAlertMessage = true
@@ -208,11 +209,12 @@ struct ChooseTrackView: View {
                             .foregroundColor(selectedTrack == -1 ? .gray.opacity(0.75) : .mint.opacity(0.95))
                         
                     }
-                    .disabled(orientationInfo.orientation == .portrait ? true : false)
+//                    .disabled(orientationInfo.orientation == .portrait ? true : false)
                     
                     if orientationInfo.orientation == .portrait && self.portraitAlertMessage == true {
                         Label {
-                            Text("Turn Phone Into Landscape")
+                            Text("Turn Phone Into Landscape Mode!")
+                                .bold()
                         } icon: {
                             Image(systemName: "iphone.landscape")
                                 .resizable()

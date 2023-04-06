@@ -6,7 +6,6 @@
 //
 
 import MusicScore
-//import MusicSymbol
 import QuartzCore
 import QuartzAdapter
 import SwiftUI
@@ -17,11 +16,11 @@ import Pitch
 
 
 struct CALayerCreatorWrapper: View {
-    @EnvironmentObject private var stateManagement: StateManagement
-    @Binding private var selectedTrack: Int
-    @Binding private var startDisplaying: Bool
+    @EnvironmentObject var stateManagement: StateManagement
+    @Binding var selectedTrack: Int
+    @Binding var startDisplaying: Bool
     
-    @Binding private var clef: Clef
+    @Binding var clef: Clef
     
     @State private var offset: CGFloat = 0
     @State private var minWidth = 0.0
@@ -41,7 +40,7 @@ struct CALayerCreatorWrapper: View {
                     .padding(.trailing, minWidth)
                     .offset(x: self.offset, y: 0)
                     .onAppear {
-                        minWidth = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: layer.testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: Clef(.treble))).bounds.width
+                        minWidth = CALayer(BeamsNoteheads().beamsAndNoteheads(externalPitches: layer.testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: Clef(.treble))).bounds.width
                     }
                 
             }
@@ -149,7 +148,7 @@ struct CALayerCreator: UIViewRepresentable {
         scrollView.bottomAnchor.constraint(equalTo: rect.bottomAnchor, constant: -8.0).isActive = true
         
         //          MARK: for singular composite
-        lazy var layer2 = CALayer(PremadeViews().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: clef))
+        lazy var layer2 = CALayer(BeamsNoteheads().beamsAndNoteheads(externalPitches: testAccessMeasureAndNotes(selectedTrack: selectedTrack), clef: clef))
         
         
         rect.layer.addSublayer(layer2)
@@ -190,7 +189,7 @@ struct CALayerCreator: UIViewRepresentable {
                 let rawAccidental = fullDesc[1]
                 print("accidental", rawAccidental)
                 
-                var accidental: Pitch.Spelling.Modifier = {
+                let accidental: Pitch.Spelling.Modifier = {
                     if rawAccidental == "♯" {
                         return .sharp
                     }

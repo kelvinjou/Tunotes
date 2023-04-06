@@ -3,7 +3,7 @@
 //  StaffView
 //
 //  Created by James Bean on 1/16/17.
-//
+//  Heavily Modified by Kelvin Jou
 //
 
 import Geometry
@@ -16,26 +16,12 @@ public class NoteheadView: Renderable {
 
         public let staffSlotHeight: StaffSlotHeight
         public let scale: Double
-//        public let noteDuration: Double
-
         public init(staffSlotHeight: StaffSlotHeight, scale: Double = 1) {
             self.staffSlotHeight = staffSlotHeight
             self.scale = scale
-//            self.noteDuration = noteDuration
         }
     }
-    
-//    func getNote(spelling: SpelledPitch) -> Int {
-//        var noteSpelling = ["c", "d", "e", "f", "g", "a", "b"]
-//        for note in 0..<noteSpelling.count {
-//            var letter: String = spelledNote.spelling.letterName.rawValue
-//            if letter == noteSpelling[note] {
-//                return note
-//            }
-//        }
-//        return 0
-//    }
-    
+
     
     public var rendered: StyledPath.Composite {
         var pathNote: Path = path
@@ -167,21 +153,20 @@ public class NoteheadView: Renderable {
     }
     
     private func halfNote(stemAbove: Bool) -> Path {
-        var ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
 
         ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
         ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
         ovalPath.move(to: CGPoint(x: 0, y: 10))
         ovalPath.addLine(to: CGPoint(x: 0, y: 110))
-//        ovalPath.move(to: CGPoint(x: 0, y: 110))
-//        ovalPath.addLine(to: CGPoint(x: 20, y: 105))
+
         ovalPath.close()
         return Path
             .init(ovalPath.cgPath)
     }
     
     private func wholeNote(stemAbove: Bool) -> Path {
-        var ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
+        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 35, height: 20))
         ovalPath.apply(CGAffineTransform(rotationAngle: 30 * .pi / -180))
         ovalPath.apply(CGAffineTransform(translationX: -5, y: 10))
         return Path

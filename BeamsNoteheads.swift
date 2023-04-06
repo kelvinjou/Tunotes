@@ -14,41 +14,12 @@ import Geometry
 
 
 
-class PremadeViews {
-    
-    func flat() -> StyledPath.Composite {
-        let flat = Sharp(position: Point(x: 0, y: 300), size: StaffItemSize(staffSlotHeight: StaffSlotHeight(5), scale: 2), color: .black).rendered
-        return flat
-    }
-    
-    func staffLinesAndClef() -> [StyledPath.Composite] {
-        let clefs: [Clef.Kind] = [.tenor]
-        var currentElement = 0
-        var renderedViews = [StyledPath.Composite]()
-        
-        for clef in clefs {
-            let builder = StaffView.Builder(clef: Clef(clef), configuration: StaffConfiguration())
-            
-            builder.startLines(at: 0)
-            builder.stopLines(at: 500)
-            let staffView = builder.build()
-            
-            renderedViews.append(staffView.rendered)
-            currentElement += 1
-        }
-        if currentElement == clefs.count {
-            return renderedViews
-        }
-        return []
-    }
-    
+class BeamsNoteheads {
     func beamsAndNoteheads(externalPitches: [NoteModel], clef: Clef) -> StyledPath.Composite {
 
         let representable = externalPitches.map {
             StaffRepresentablePitch($0.spelledPitch)
         }
-
-//        print("This is representable", representable)
         let points = representable.map { StaffPointModel([$0]) }
         let positions = (0..<externalPitches.count).map { Double($0) * 100 + 100 }
 
@@ -63,7 +34,6 @@ class PremadeViews {
         let staff = StaffView(model: model)
         let newBeam = Beam(start: Point(x: 1, y: 1), end: Point(x: 2, y: 2), width: 1)
         let score = ScoreView(beams: BeamsView(beams: [newBeam], color: .black), staff: staff).rendered.resizedToFitContents
-        
         
         return score
     
@@ -89,7 +59,7 @@ struct Zip3Sequence<E1, E2, E3>: Sequence, IteratorProtocol {
     }
 }
 
-extension PremadeViews {
+extension BeamsNoteheads {
     func zip3<S1: Sequence, S2: Sequence, S3: Sequence>(_ s1: S1, _ s2: S2, _ s3: S3) -> Zip3Sequence<S1.Element, S2.Element, S3.Element> {
         return Zip3Sequence(s1, s2, s3)
     }

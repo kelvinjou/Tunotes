@@ -34,7 +34,6 @@ class ChooseMidiTrack {
         return listOfDict
     }
     func getMusicParts2(midi: MidiData) -> [String] {
-//        var notesInTracks: [[NoteInScore]] = []
         var result: [String] = []
         var instrument = InstrumentType.unknown
         
@@ -44,7 +43,6 @@ class ChooseMidiTrack {
             if let midiPatch = midi.noteTracks[idx].patch {
                 instrument = InstrumentType(rawValue: Int(midiPatch.patch.rawValue))!
             }
-//            let name = String(reflecting: instrument) + "_\(idx)"
             let part = "\(instrument)"
 
             result.append(part)
