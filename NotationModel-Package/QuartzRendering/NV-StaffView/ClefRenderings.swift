@@ -64,15 +64,15 @@ public final class BassClef: StaffClefView {
     
     public override var ornament: StyledPath {
         
-        let path0: Path = [-1,1].map { sign in
-            Path.circle(
-                center: Point(
-                    x: 0.75 * staffSlotHeight,
-                    y: ornamentAltitude + 0.8 * Double(sign) * staffSlotHeight
-                ),
-                radius: 0.25 * staffSlotHeight
-            )
-        }.sum
+//        let path0: Path = [-1,1].map { sign in
+//            Path.circle(
+//                center: Point(
+//                    x: 0.75 * staffSlotHeight,
+//                    y: ornamentAltitude + 0.8 * Double(sign) * staffSlotHeight
+//                ),
+//                radius: 0.25 * staffSlotHeight
+//            )
+//        }.sum
         
         let styling = Styling(fill: Fill(color: configuration.foregroundColor))
         

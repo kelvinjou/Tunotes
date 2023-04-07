@@ -1,8 +1,8 @@
 //
-//  File.swift
+//  BeamNoteheads.swift
 //  CorrectSwiftPMFormat
 //
-//  Created by Kelvin J on 7/14/22.
+//  Created by Kelvin J on 3/23/23.
 //
 import SwiftUI
 import Pitch

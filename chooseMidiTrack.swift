@@ -1,8 +1,8 @@
 //
-//  File.swift
+//  ChooseMidiTrack.swift
 //  CorrectSwiftPMFormat
 //
-//  Created by Kelvin J on 10/15/22.
+//  Created by Kelvin J on 3/15/23.
 //
 
 import Foundation
@@ -16,7 +16,6 @@ class ChooseMidiTrack {
     let data = ScoreSamples.url_spring1st
     
     func listOutAllNoteTracks(songURL: URL) -> [ [String : MidiNoteTrack] ]? {
-//        var listOfNoteTracks: [MidiNoteTrack]
         var listOfDict: [ [String : MidiNoteTrack] ] = [[ : ]]
         
         guard let data = try? Data(contentsOf: songURL) else {

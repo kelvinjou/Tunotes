@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ListOfSongs.swift
 //  CorrectSwiftPMFormat
 //
 //  Created by Kelvin J on 3/31/23.
@@ -13,14 +13,12 @@ struct ListOfSongs: View {
     @EnvironmentObject var stateManagement: StateManagement
     @Binding var pageIndex: Int
     let list: [URL] = [
-//        ScoreSamples.url_spring1st
+        // song file access
         Bundle.main.url(forResource: "Happy Birthday", withExtension: "mid")!,
-        Bundle.main.url(forResource: "Chopin nocturne op. 9, no. 2", withExtension: "mid")!,
         Bundle.main.url(forResource: "Beethoven Violin Sonata No.5 Op.24", withExtension: "mid")!,
+        Bundle.main.url(forResource: "Chopin nocturne op. 9, no. 2", withExtension: "mid")!,
         Bundle.main.url(forResource: "DAY6 Shoot Me", withExtension: "mid")!,
         Bundle.main.url(forResource: "DAY6 I'll Try", withExtension: "mid")!
-        
-
     ]
     @Binding var progress: CGFloat
     let gradient1 = Gradient(colors: [.purple, .yellow])
@@ -43,6 +41,7 @@ struct ListOfSongs: View {
                         Text("Here's a few MIDI files that you could try out and display individual instrument parts. Sometimes, it could be fustrating when you can't find music scores meant for multiple instruments. This is where Melodi comes in!")
                             .bold()
                             .padding()
+                        Text("Try running Beethoven's violin sonata!")
                     VStack {
                         ScrollView(showsIndicators: false) {
                             ForEach(0..<list.count, id: \.self) { song in
@@ -53,15 +52,18 @@ struct ListOfSongs: View {
                                         Text(String(list[song].lastPathComponent))
                                     )
                                     .onTapGesture {
-                                        selected = song
-                                        stateManagement.selectedSong = list[song]
+                                        withAnimation(.spring()) {
+                                            selected = song
+                                            stateManagement.selectedSong = list[song]
+                                        }
                                     }
                             }
                         }
                         .padding()
                         Button(action: {
-                            
-                            pageIndex += 1
+                            withAnimation {
+                                pageIndex += 1
+                            }
                         }) {
                             Capsule()
                                 .frame(width: 140, height: 35)
@@ -71,13 +73,20 @@ struct ListOfSongs: View {
                                 )
                                 .foregroundColor(selected == -1 ? .gray.opacity(0.75) : .mint.opacity(0.95))
                         }
+                        
+                        Text("Made with ❤️ by Kelvin J")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
                     }
                 }
             }
             .navigationBarTitle("Choose Song")
             .navigationBarItems(
                 leading: Button(action: {
-                    pageIndex -= 1
+                    withAnimation {
+                        pageIndex -= 1
+                    }
                 }) {
                     Image(systemName: "chevron.left")
                         .foregroundColor(.primary)

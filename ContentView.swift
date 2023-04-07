@@ -1,3 +1,9 @@
+//
+//  ContentView.swift
+//  CorrectSwiftPMFormat
+//
+//  Created by Kelvin J on 2/15/23.
+//
 import SwiftUI
 
 import MusicScore

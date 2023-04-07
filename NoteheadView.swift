@@ -3,8 +3,9 @@
 //  StaffView
 //
 //  Created by James Bean on 1/16/17.
-//  Heavily Modified by Kelvin Jou
 //
+
+//  Heavily Modified by Kelvin Jou 
 
 import Geometry
 import Path

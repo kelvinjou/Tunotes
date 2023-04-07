@@ -39,7 +39,6 @@ public struct StaffRepresentedPitch {
         self.noteDuration = noteDuration
         self.spelledNote = spelledNote
         
-        #warning("THIS IS USED BY StaffRepresentablePitch")
         self.notehead = NoteheadView(
             position: Point(x: position, y: altitude),
             size: NoteheadView.Size(staffSlotHeight: staffSlotHeight, scale: 1),
