@@ -10,4 +10,3 @@ I found myself faced with a paywall when trying to view the full score of a cont
 
 ![simulator_screenshot_C9B52377-E861-4C1F-9622-715369F1441C](https://github.com/kelvinjou/Tunotes/assets/63611619/d5d9da82-a4a2-447d-be24-8f8ff5eb8a33)
 ![simulator_screenshot_C9B52377-E861-4C1F-9622-715369F1441C](https://github.com/kelvinjou/Tunotes/assets/63611619/3f5689d0-676e-470f-90e2-fe5e931da9f8)
-![simulator_screenshot_34381C1C-7E10-4EA4-84AC-C002761A2062](https://github.com/kelvinjou/Tunotes/assets/63611619/9228765f-49a2-484c-a68f-1c8efb23cbff)
